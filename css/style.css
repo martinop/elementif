@@ -1,0 +1,112 @@
+.logo{
+	width: 250px;
+	height: 70px;
+}
+
+.fullscreen{
+	width: 100%;
+}
+
+.material-icons{
+	font-size: 40px;
+
+}
+.button-collapse{
+	color: #FF524A;
+}
+
+p{
+	margin-top: 0.2rem;
+	font-size: 18px;
+}
+
+.divider{
+	background-color: #FF524A;
+	height: 0.3rem;
+}
+.icon-block i{
+	margin-top: 0.7rem !important;
+}
+
+.nav-wrapper a{
+	color: black !important;
+}
+.container{
+	width: 90% !important;
+}
+.nav-wrapper a:hover{
+	background: rgba(255, 255, 255, 0.3);
+}
+
+.mtop{
+	margin-top: 20px;
+}
+
+.mbot{
+	margin-bottom: 40px;
+}
+
+.mleft{
+	margin-left: 40px;
+}
+.row{
+	margin-bottom: 0px;
+}
+.fullwidth{
+	width: 100% !important;
+}
+
+.arena .pokemon{
+	width: 150px;
+	height: 150px;
+}
+.arena{
+	background-image: url("arena.png");
+	background-size: 100% 100%;	
+
+}
+
+
+.opciones .btn{
+	margin-right: 20px;
+}
+
+.inline{
+	display: inline-block !important;
+}
+
+.nomargina{
+	margin-top: 0px !important;
+	margin-bottom: 0px !important;
+}
+.vida{
+	width: 220px;
+	height: 30px;
+}
+
+.icon{
+	width: 25px;
+	height: 25px;
+}
+
+.elegir:active{
+	background-color: white !important;
+}
+
+.ctamed .progress{
+	height: 25px !important;
+	background-color: #1B83D9;
+}
+
+.ctamed .progress .indeterminate{
+	background-color: #7BB2DF !important;
+}
+
+.nomarginl{
+	margin-left: 0px !important;
+	margin-right: 0px !important;
+}
+
+.pbot{
+	padding-bottom: 50px !important;
+}

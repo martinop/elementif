@@ -1,0 +1,96 @@
+  <!DOCTYPE html>
+  <html ng-app="elementif">
+    <head>
+      <title>Elementif</title>
+      <!--<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">-->
+      <link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
+      <link href="css/style.css" rel="stylesheet">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+      <script src="scripts/libs/jquery-2.1.4.min.js"></script>
+      <script src="scripts/libs/angular.min.js"></script>
+      <script src="scripts/libs/angular-route.min.js"></script>
+      <script src="scripts/libs/angular-ui-router.js"></script>
+      <script src="scripts/libs/angular-ui-router.min.js"></script>
+      <script src="scripts/libs/materialize.min.js"></script>
+      <script src="node_modules\angular-materialize\src\angular-materialize.js"></script>
+      <script src="scripts/libs/ngStorage.js"></script>
+      <script src="scripts/controllers/main.js"></script>
+      <script src="scripts/controllers/services.js"></script>
+    </head>
+
+    <body ng-controller="sesionController" class=" grey lighten-4">
+      <nav class="white" role="navigation">
+        <div class="nav-wrapper container">
+          <a id="logo-container" href="#home" class="brand-logo"><img src="media/imgs/logo.png" class="logo"></a>
+          <ul class="right hide-on-med-and-down">
+            <li ng-show="myUser"class="red"><a href="#battle">Jugar Ahora</a></li>
+            <li ng-show="myUser"class="green"><a href="#myProfile">{{myUser.user_1}}</a></li>
+            <li class="cyan"><a href="#home">Tamedex</a></li>
+            <li class="red"><a href="#">Ranking</a></li>
+            <li ng-show="!myUser"class="yellow"><a href="" data-target="sesion" class="modal-trigger">Iniciar sesion</a></li>
+            <li ng-show="myUser"class="yellow"><a href="" ng-click="logout()">Cerrar sesion</a></li>
+          </ul>
+
+          <ul id="nav-mobile" class="side-nav">
+            <li><a href="#home">Tamedex</a></li>
+            <li><a href="#home">Juegos en Linea</a></li>
+            <li ><a href="" data-target="sesion" class="modal-trigger">Iniciar sesion</a></li>
+            <li><a href="#home">Ranking</a></li>
+          </ul>
+          <a href="#" data-activates="nav-mobile" class="button-collapse"><i class="material-icons">menu</i></a>
+        </div>
+      </nav>
+
+
+  <div ui-view></div>
+  <div class="container">
+
+
+  <!-- Modal Structure -->
+  <div id="sesion" class="modal">
+    <div class="modal-content">
+      <h4>Inicio de sesion / Registro</h4>
+      <div class="row">
+        <div class="input-field col s6">
+            <input type="text" class="validate" ng-model="username">
+            <label >Usuario</label>
+          </div>
+          <div class="input-field col s6">
+            <input type="password" class="validate" ng-model="password">
+            <label >Contraseña</label>
+          </div>
+          <div class="col s4 offset-s2 mtop">
+            <a class="waves-effect waves-light btn green" ng-click="signup()"><i class="material-icons left"></i>Registrarse</a>
+          </div>
+          <div class="col s4 mtop">
+            <a class="waves-effect waves-light btn cyan" ng-click="login()"><i class="material-icons left"></i>Iniciar Sesión</a>
+          </div>
+          <div class="col s4 offset-s4 mtop">
+            <h5>{{stateLogin}}</h5>
+          </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+    
+    </div>
+  </div>
+
+  </div>
+
+
+
+      <script>
+        function closeModal(){
+          $('#sesion').closeModal();
+        }
+        $(document).ready(function(){
+          $('.parallax').parallax();
+          $('.modal-trigger').leanModal();
+          $(".button-collapse").sideNav();
+        });
+      </script>
+
+
+    </body>
+  </html>
+        

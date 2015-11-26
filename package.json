@@ -1,0 +1,30 @@
+{
+  "name": "proyectoia",
+  "version": "1.0.0",
+  "description": "Elementif proyecto de IA",
+  "main": "server.js",
+  "scripts": {
+    "test": "npm install"
+  },
+  "repository": {
+    "type": "git",
+    "url": "none"
+  },
+  "keywords": [
+    "pokemon"
+  ],
+  "author": "elementif devs",
+  "license": "ISC",
+  "dependencies": {
+    "angular-materialize": "^0.1.1",
+    "bluebird": "^3.0.5",
+    "body-parser": "^1.14.1",
+    "express": "^4.13.3",
+    "jsonwebtoken": "^5.4.1",
+    "mysql": "^2.9.0",
+    "pg": "^4.4.3",
+    "pg-bluebird": "^1.0.8",
+    "pg-promise": "^2.3.3",
+    "promise-mysql": "^1.1.1"
+  }
+}

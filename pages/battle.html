@@ -1,0 +1,67 @@
+<div class="container">
+    <div class="row mtop">
+	    <div class="col s8 offset-s2 green">
+			<h1 class="center-align white-text"> Arena de Batalla </h1>
+        </div>
+	    <div class="col s8 offset-s2 green lighten-4 arena">
+			<div class="col s12">
+				<div class="col s5 offset-s3">
+					<span class="inline mtop">
+						<h3>{{IA.name_tam}}</h3>
+						<div class="vida red"></div>
+						<h5 class="nomargina">Atk: {{IA.ataque}} | Def: {{IA.defensa}}</h5>
+					</span>
+				</div>
+				<div class="col s4">
+					<img src="media/imgs/tameds/front/{{IA.name_tam}}.gif" class="pokemon mtop">
+				</div>
+			</div>
+		<div class="col s12">
+				<div class="col s4">
+					<img src="media/imgs/tameds/back/{{myTamed.name_tam}}.gif" class="pokemon mtop">
+				</div>
+				<div class="col s8">
+					<span class="inline mtop">
+						<h3>{{myTamed.name_tam}}</h3>
+						<div class="vida red"></div>
+						<h5 class="nomargina">Atk: {{myTamed.ataque}} | Def: {{myTamed.defensa}}</h5>
+					</span>
+				</div>
+
+			</div>
+        </div>
+	    <div class="col s8 offset-s2 cyan">
+	    	<h5 class="center-align white-text">Dialogo</h5>
+	    </div>
+	    <div class="col s8 offset-s2 cyan lighten-4 opciones center-align">
+	    	<h5>Pokemon1 uno realizo el ataque ***...</h5>
+	    	<h5>Pokemon2 recibio 30 de daño...</h5>
+	    </div>
+	    <div class="col s8 offset-s2 teal">
+	    	<h5 class="center-align white-text">Opciones</h5>
+	    </div>
+	    <div class="col s8 offset-s2 teal lighten-4 opciones center-align mbot">
+	    	<div class="mtop col s12">
+				<ul class="nomargina">
+					<li>
+						<a class="waves-effect waves-light btn blue mtop">{{myTamed.habilidades[0].nombre_hab}}</a>
+						<a class="waves-effect waves-light btn blue mtop">{{myTamed.habilidades[1].nombre_hab}}</a>
+					</li>
+
+					<li>
+						<a class="waves-effect waves-light btn brown mtop">{{myTamed.habilidades[2].nombre_hab}}</a>
+						<a class="waves-effect waves-light btn brown mtop">{{myTamed.habilidades[3].nombre_hab}}</a>
+					</li>
+					<li>
+						<a class="waves-effect waves-light btn mtop mbot red">Rendirse</a>
+					</li>
+				</ul>
+				<!--<a class="waves-effect waves-light btn blue mright">{{myTamed.habilidades[0].nombre_hab}}</a>-->
+				<!--<a class="waves-effect waves-light btn blue mright">{{myTamed.habilidades[1].nombre_hab}}</a>-->
+				<!--<a class="waves-effect waves-light btn brown mright">{{myTamed.habilidades[2].nombre_hab}}</a>-->
+				<!--<a class="waves-effect waves-light btn brown mright mtop">{{myTamed.habilidades[3].nombre_hab}}</a>-->
+				<!--<a class="waves-effect waves-light btn mright mtop red">Rendirse</a>-->
+			</div>
+	    </div>
+    </div>
+</div>

@@ -1,0 +1,101 @@
+<div class="container">
+	<div class="row" ng-show="!myTamed && !loading && !configuring && tameds">
+		<div class="col s10 offset-s1 center-align mtop blue" >
+			<h3> Aún no tienes un Tamed, es hora de elegir uno: </h3>
+			</div>
+			<div class="col s10 offset-s1 mbot pbot center-align  blue lighten-4" ng-show="!myTamed">
+				<div class="col s12 mtop " ng-repeat="tamed in tameds" ng-click="selectTamed(tamed)">
+					<div class="col s12 blue lighten-3 hoverable">
+						<div class="col s4">
+							<h4>{{tamed.name_tam}}</h4>
+							<img src="media/imgs/tameds/{{tamed.name_tam}}.png" class="fullwidth">
+							<img src="media/imgs/icons/health.png" class="icon">
+							<h5 class="inline">{{tamed.vida}} </h5>
+							<img src="media/imgs/icons/attack.png" class="icon">
+							<h5 class="inline"> {{tamed.ataque}}</h5>
+							<img src="media/imgs/icons/accuracy.png" class="icon">
+							<h5 class="inline"> {{tamed.precision}}</h5>
+							<div class="col s6">
+								<h5>Fortaleza</h5>
+			 					<img src="media/imgs/elements/{{tamed.elemento_tam}}.png" class="elemento">
+							</div>
+							<div class="col s6">
+								<h5>Debilidad</h5>
+			 					<img src="media/imgs/elements/{{tamed.debilidad_tam}}.png" class="elemento">
+							</div>
+						</div>
+
+						<div class="col s8">
+							<div class="col s12">
+								<h4> Habilidades</h4>
+								<div class="divider blue"></div>
+							</div>
+							<div class="col s12" ng-repeat="habilidad in tamed.habilidades">
+								<h5>{{habilidad.nombre_hab}}</h5>
+								<p class="nomargina">{{habilidad.descripcion_hab}}</p>
+							</div>
+						</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row center-align ctamed" ng-show="configuring">
+		<div class="col s10 offset-s1 center-align mtop blue lighten-4" >
+			<h3> Configurando tu Tamed </h3>
+		</div>
+		<div class="col s10 offset-s1 mbot center-align blue lighten-4">
+		  <div class="progress">
+		      <div class="indeterminate"></div>
+		  </div>
+		</div>
+	</div>
+
+	<div class="row" ng-show="myTamed">
+			<div class="col s10 offset-s1 mbot mtop pbot center-align  blue lighten-4">
+				<div class="col s12 mtop ">
+					<div class="col s12 blue lighten-3 hoverable">
+						<div class="col s4">
+							<h4>{{myTamed.name_tam}}</h4>
+							<img src="media/imgs/tameds/{{myTamed.name_tam}}.png" class="fullwidth">
+							<img src="media/imgs/icons/health.png" class="icon">
+							<h5 class="inline">{{myTamed.vida}} </h5>
+							<img src="media/imgs/icons/attack.png" class="icon">
+							<h5 class="inline"> {{myTamed.ataque}}</h5>
+							<img src="media/imgs/icons/accuracy.png" class="icon">
+							<h5 class="inline"> {{myTamed.precision}}</h5>
+							<div class="col s6">
+								<h5>Fortaleza</h5>
+			 					<img src="media/imgs/elements/{{myTamed.elemento_tam}}.png" class="elemento">
+							</div>
+							<div class="col s6">
+								<h5>Debilidad</h5>
+			 					<img src="media/imgs/elements/{{myTamed.debilidad_tam}}.png" class="elemento">
+							</div>
+						</div>
+
+						<div class="col s8">
+							<div class="col s12">
+								<h4> Habilidades</h4>
+								<div class="divider blue"></div>
+							</div>
+							<div class="col s12" ng-repeat="habilidad in myTamed.habilidades ">
+								<h5>{{habilidad.nombre_hab}}</h5>
+								<p>{{habilidad.descripcion_hab}}</p>
+							</div>
+						</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="row center-align ctamed" ng-show="!tameds">
+		<div class="col s10 offset-s1 center-align mtop blue lighten-4" >
+			<h3> Cargando...</h3>
+		</div>
+		<div class="col s10 offset-s1 mbot center-align blue lighten-4">
+		  <div class="progress">
+		      <div class="indeterminate"></div>
+		  </div>
+		</div>
+	</div>
+</div>
