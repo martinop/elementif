@@ -12,7 +12,7 @@
       <script src="scripts/libs/angular-ui-router.js"></script>
       <script src="scripts/libs/angular-ui-router.min.js"></script>
       <script src="scripts/libs/materialize.min.js"></script>
-      <script src="node_modules\angular-materialize\src\angular-materialize.js"></script>
+      <script src="node_modules/angular-materialize/src/angular-materialize.js"></script>
       <script src="scripts/libs/ngStorage.js"></script>
       <script src="scripts/controllers/main.js"></script>
       <script src="scripts/controllers/services.js"></script>
@@ -23,12 +23,12 @@
         <div class="nav-wrapper container">
           <a id="logo-container" href="#home" class="brand-logo"><img src="media/imgs/logo.png" class="logo"></a>
           <ul class="right hide-on-med-and-down">
-            <li ng-show="myUser"class="red"><a href="#battle">Jugar Ahora</a></li>
-            <li ng-show="myUser"class="green"><a href="#myProfile">{{myUser.user_1}}</a></li>
+            <li ng-show="myUser" class="red"><a href="#battle">Jugar Ahora</a></li>
+            <li ng-show="myUser" class="green"><a href="#myProfile">{{myUser.user_1}}</a></li>
             <li class="cyan"><a href="#home">Tamedex</a></li>
             <li class="red"><a href="#">Ranking</a></li>
-            <li ng-show="!myUser"class="yellow"><a href="" data-target="sesion" class="modal-trigger">Iniciar sesion</a></li>
-            <li ng-show="myUser"class="yellow"><a href="" ng-click="logout()">Cerrar sesion</a></li>
+            <li ng-show="!myUser" class="yellow"><a href="" data-target="sesion" class="modal-trigger">Iniciar sesion</a></li>
+            <li ng-show="myUser" class="yellow"><a href="" ng-click="logout()">Cerrar sesion</a></li>
           </ul>
 
           <ul id="nav-mobile" class="side-nav">
