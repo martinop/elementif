@@ -80,8 +80,8 @@ app.controller('sesionController', ['$scope', 'Querys','Data','$location',
 		$location.path('/home');
 	}
 }]);
-app.controller('myProfileController', ['$rootScope', '$scope', '$localStorage', '$http', 'Querys','Data','$location',
-	function ($rootScope, $scope, $localStorage, $http, Querys, Data, $location) {
+app.controller('myProfileController', ['$scope', 'Querys','Data','$location',
+	function ($scope, Querys, Data, $location) {
 	$scope.loading = true;
 	$scope.configuring = false;
 	$scope.myTamed  = Data.getTamed() || false;
@@ -121,7 +121,7 @@ app.controller('myProfileController', ['$rootScope', '$scope', '$localStorage', 
 			ataque: tamed.ataque,
 			precision: tamed.precision,
 			habilidades: tamed.habilidades,
-			potenciador: (Math.random() * 11) - 6
+			potenciador: ((parseInt(Math.random() * 11) % 11) - 5) / 10		// Set potenciador in range [-0.5 0.5]
 		};
 		console.log(formData);
 		Querys.createTamed(formData)
@@ -135,8 +135,8 @@ app.controller('myProfileController', ['$rootScope', '$scope', '$localStorage', 
 	}
 }]);
 
-app.controller('battleController', ['$rootScope', '$scope', '$location', '$localStorage', '$http', 'Querys','Data','$location',
-	function ($rootScope, $scope, $location, $localStorage, $http, Querys, Data, $location) {
+app.controller('battleController', ['$scope', 'Querys','Data','$location',
+	function ($scope, Querys, Data, $location) {
 	$scope.tameds = Data.getTameds() || false;
 	$scope.myTamed  = Data.getTamed() || false;
 	if($scope.tameds) {
