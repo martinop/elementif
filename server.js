@@ -66,7 +66,16 @@ app.get('/login', function (req, res) {
 });
 
 app.get('/tameds', function (req, res) {
-    queryString = "SELECT id_tam FROM tamed";
+    queryString = "SELECT " +
+        "id_tam, " +
+        "name_tam, " +
+        "elemento_tam, " +
+        "debilidad_tam, " +
+        "vida, " +
+        "ataque, " +
+        "defensa, " +
+        "tamed.precision " +
+        "FROM tamed";
     Promise.map(connection.query(queryString), function(tamed){
         return Promise.all([
             connection.query("SELECT " +
