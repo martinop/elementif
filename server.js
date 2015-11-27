@@ -14,10 +14,14 @@ app.use(bodyParser.urlencoded({
 app.use(bodyParser.json());
 
 mysql.createConnection({
-    host: '127.0.0.1',
-    user: 'root',
-    password: '',
+    host: 'db4free.net',
+    user: 'zaddler01',
+    password: '123456',
     database: 'pokemondb'
+    //host: '127.0.0.1',
+    //user: 'root',
+    //password: '',
+    //database: 'pokemondb'
 }).then(function(success){
     console.log("Conectado");
     connection = success;
@@ -30,13 +34,13 @@ app.use(express.static(__dirname + '/'));
 
 
 app.post('/signup', function (req, res) {
-    queryString = "SELECT * FROM usuarios WHERE user_1 = '" + req.body.user_1 + "'";
+    queryString = "SELECT user_1 FROM usuarios WHERE user_1 = '" + req.body.user_1 + "';";
     connection.query(queryString)
     .then(function(success){
         success.length > 0 ? res.send("Duplicate") : end();
     });
     function end(){
-        queryString = "INSERT INTO usuarios(user_1,pass) VALUES('"+req.body.user_1+'", "'+req.body.password+"')";
+        queryString = "INSERT INTO usuarios(user_1,pass) VALUES('"+req.body.user_1+"', '"+req.body.password+"');";
         connection.query(queryString)
         .then(function(){
             res.send("DONE")
@@ -46,10 +50,13 @@ app.post('/signup', function (req, res) {
     }
 
 });
-
 app.get('/login', function (req, res) {
-    //var password = jwt.sign(req.body.password, JWT_SECRET);
-    queryString = "SELECT user_1, id_tam FROM usuarios WHERE user_1 = '"+req.query.user_1+"' AND pass = '"+req.query.password+"'";
+    queryString = "SELECT " +
+        "user_1, " +
+        "id_tam " +
+        "FROM usuarios " +
+        "WHERE user_1 = '"+req.query.user_1+"' " +
+        "AND pass = '"+req.query.password+"';";
     connection.query(queryString)
     .then(function(success){
         success.length > 0 ? res.send(success[0]) : res.send("Error");
@@ -59,10 +66,21 @@ app.get('/login', function (req, res) {
 });
 
 app.get('/tameds', function (req, res) {
-    queryString = "SELECT * from tamed";
+    queryString = "SELECT id_tam FROM tamed";
     Promise.map(connection.query(queryString), function(tamed){
         return Promise.all([
-            connection.query("SELECT habilidades.id_hab, nombre_hab,descripcion_hab,fuego,agua,planta,volador from tamed INNER JOIN tamed_hab ON(tamed_hab.id_tam = tamed.id_tam) INNER JOIN habilidades ON(habilidades.id_hab = tamed_hab.id_hab) WHERE tamed.id_tam = "+tamed.id_tam)
+            connection.query("SELECT " +
+                "habilidades.id_hab, " +
+                "habilidades.nombre_hab, " +
+                "habilidades.descripcion_hab, " +
+                "habilidades.fuego, " +
+                "habilidades.agua, " +
+                "habilidades.planta, " +
+                "habilidades.volador " +
+                "FROM tamed INNER JOIN tamed_hab " +
+                    "ON(tamed_hab.id_tam = tamed.id_tam) INNER JOIN habilidades " +
+                    "ON(habilidades.id_hab = tamed_hab.id_hab) " +
+                "WHERE tamed.id_tam = "+tamed.id_tam+";")
             .then(function(abilities){
                 tamed.habilidades = abilities;
             })
@@ -78,9 +96,12 @@ app.get('/tameds', function (req, res) {
 });
 
 app.post('/createTamed', function (req, res) {
-    queryString = "UPDATE usuarios SET id_tam = "+req.body.id_tam+", ataque = "+req.body.ataque+", defensa ="+req.body.ataque+", vida = "+req.body.vida+", usuarios.precision = "+req.body.precision+", usuarios.potenciador = "+req.body.potenciador+" WHERE user_1 = '"+req.body.username+"'";
+    queryString = "UPDATE " +
+        "usuarios SET id_tam = "+req.body.id_tam+", " +
+        "potenciador = "+req.body.potenciador+" " +
+        "WHERE user_1 = '"+req.body.username+"';";
     connection.query(queryString)
-    .then(function(success){
+    .then(function(success){    // <-- Este succes se puede borrar, te lo dejo a vos
         res.send("Success");
     }).catch(function(error){
         console.log(error);
@@ -88,7 +109,21 @@ app.post('/createTamed', function (req, res) {
 });
 
 app.get('/myTamed', function (req, res) {
-    queryString = "SELECT usuarios.nivel,usuarios.exp, usuarios.potenciador,usuarios.vida,usuarios.ataque,usuarios.defensa,usuarios.precision, usuarios.id_tam,name_tam,elemento_tam,debilidad_tam from tamed INNER JOIN usuarios ON(usuarios.id_tam = tamed.id_tam) WHERE user_1 = '"+req.query.user_1+"'";
+    queryString = "SELECT " +
+        "usuarios.nivel, " +
+        "usuarios.exp, " +
+        "usuarios.potenciador, " +
+        "tamed.vida, " +
+        "tamed.ataque, " +
+        "tamed.defensa, " +
+        "tamed.precision, " +
+        "tamed.id_tam, " +
+        "tamed.name_tam, " +
+        "tamed.elemento_tam, " +
+        "tamed.debilidad_tam " +
+        "FROM tamed INNER JOIN usuarios " +
+            "ON(usuarios.id_tam = tamed.id_tam) " +
+        "WHERE user_1 = '"+req.query.user_1+"';";
     connection.query(queryString)
     .then(function(success){
         var myTamed = {
@@ -105,7 +140,18 @@ app.get('/myTamed', function (req, res) {
             elemento_tam: success[0].elemento_tam,
             habilidades : []
         };
-        queryString = "SELECT habilidades.id_hab, nombre_hab,descripcion_hab,fuego,agua,planta,volador from tamed INNER JOIN tamed_hab ON(tamed_hab.id_tam = tamed.id_tam) INNER JOIN habilidades ON(habilidades.id_hab = tamed_hab.id_hab) WHERE tamed.id_tam = "+success[0].id_tam;
+        queryString = "SELECT " +
+            "habilidades.id_hab, " +
+            "habilidades.nombre_hab, " +
+            "habilidades.descripcion_hab, " +
+            "habilidades.fuego, " +
+            "habilidades.agua, " +
+            "habilidades.planta, " +
+            "habilidades.volador " +
+            "FROM tamed INNER JOIN tamed_hab " +
+                "ON(tamed_hab.id_tam = tamed.id_tam) INNER JOIN habilidades " +
+                "ON(habilidades.id_hab = tamed_hab.id_hab) " +
+            "WHERE tamed.id_tam = "+success[0].id_tam+";";
         connection.query(queryString)
         .then(function(abilities){
             myTamed.habilidades = abilities;
