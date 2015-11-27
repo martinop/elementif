@@ -5,7 +5,8 @@ var app = angular.module('elementif', [
     'ui.router'
 ]);
 
-app.config(['$routeProvider', '$httpProvider', '$stateProvider', '$urlRouterProvider', function ($routeProvider, $httpProvider, $stateProvider, $urlRouterProvider) {    
+app.config(['$routeProvider', '$httpProvider', '$stateProvider', '$urlRouterProvider',
+	function ($routeProvider, $httpProvider, $stateProvider, $urlRouterProvider) {    
             $urlRouterProvider.otherwise("/home");
 
 
