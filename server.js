@@ -145,7 +145,7 @@ app.post('/createTamed', function (req, res) {
         req.body.potenciador,
         req.body.username
     ];
-    connection.query(queryString)
+    connection.query(queryString, values)
     .then(function(success){    // <-- Este succes se puede borrar, te lo dejo a vos
         res.send("Success");
     }).catch(function(error){

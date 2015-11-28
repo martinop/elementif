@@ -109,10 +109,9 @@ app.controller('myProfileController', ['$scope', 'Querys','Data','$location',
 	if(!$scope.myTamed && $scope.myUser.id_tam){
 		Querys.myTamed()
 		.then(function(success){
-			$scope.myTamed = success.data;
+			$scope.myTamed = potenciar(success.data);
 			$scope.loading = false;
 			Data.setTamed($scope.myTamed);
-			console.log($scope.myTamed.habilidades);
 		}).catch(function(error){
 			console.log(error);
 		})
@@ -129,12 +128,13 @@ app.controller('myProfileController', ['$scope', 'Querys','Data','$location',
 		var formData = {
 			id_tam: tamed.id_tam,
 			username: Data.getUser().user_1,
-			potenciador: ((parseInt(Math.random() * 11) % 11) - 5) / 10		// Set potenciador in range [-0.5 0.5]
+			potenciador: Math.range(8,12)/10		// Set potenciador in range [0.8 1.2]
 		};
 		console.log(formData);
 		Querys.createTamed(formData)
 		.then(function(success){
 			$scope.configuring = false;
+			tamed = potenciar(tamed);
 			Data.setTamed(tamed);
 			$scope.myTamed = tamed;
 		}).catch(function(error){
@@ -149,17 +149,28 @@ app.controller('battleController', ['$scope', 'Querys','Data','$location', funct
 	if($scope.tameds) {
 		var tamed = $scope.tameds[parseInt((Math.random() * 10) % 4)]; 		// Set random Tamed;
 		$scope.IA = generateRandomIA( tamed, $scope.myTamed );
-		console.log($scope.IA);
-		console.log($scope.myTamed)
 	}
 	if(!$scope.myTamed){
 		$location.path('/home');
 	}
 }]);
 
-var generateRandomIA = function( tamed, user ) {
+var generateRandomIA = function(tamed, user ) {
+	tamed.nivel = Math.range(user.nivel-3, user.nivel+3);
+	tamed.nivel = tamed.nivel<=0 ? 1 : tamed.nivel;
 
+	tamed.potenciador = Math.range(2,12)/10;
+	tamed = potenciar(tamed);
+	return tamed;
 };
+
+var potenciar = function(tamed){
+	tamed.ataque = parseInt( tamed.ataque * tamed.potenciador * tamed.nivel );
+	tamed.defensa = parseInt( tamed.defensa * tamed.potenciador * tamed.nivel );
+	tamed.vida = parseInt( tamed.vida * tamed.potenciador * tamed.nivel );
+	return tamed;
+};
+
 
 
 
