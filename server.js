@@ -106,7 +106,8 @@ app.get('/tameds', function (req, res) {
                 habilidades.fuego, \
                 habilidades.planta, \
                 habilidades.agua, \
-                habilidades.volador \
+                habilidades.volador, \
+                habilidades.clasificacion_hab \
             FROM tamed INNER JOIN tamed_hab \
                 ON(tamed_hab.id_tam = tamed.id_tam) INNER JOIN habilidades \
                 ON(habilidades.id_hab = tamed_hab.id_hab) \
@@ -186,7 +187,8 @@ app.get('/myTamed', function (req, res) {
                     habilidades.fuego, \
                     habilidades.agua, \
                     habilidades.planta, \
-                    habilidades.volador \
+                    habilidades.volador, \
+                    habilidades.clasificacion_hab \
                 FROM tamed INNER JOIN tamed_hab \
                     ON(tamed_hab.id_tam = tamed.id_tam) INNER JOIN habilidades \
                     ON(habilidades.id_hab = tamed_hab.id_hab) \

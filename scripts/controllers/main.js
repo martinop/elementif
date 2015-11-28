@@ -153,6 +153,73 @@ app.controller('battleController', ['$scope', 'Querys','Data','$location', funct
 	if(!$scope.myTamed){
 		$location.path('/home');
 	}
+
+	var datos = {
+		user_1: $scope.myTamed.user_1,
+		ia: $scope.IA.id_tam,
+		turnos: []
+	};
+
+	var turno = 1;
+
+	$scope.ataque = function( habilidad ) {
+		console.log("IA: " + $scope.IA.vida);
+
+		if( turno == 1 ) {
+			turno++;
+			datos.turnos.push( habilidad.id_hab );
+
+			var elemento = $scope.IA.elemento_tam;
+
+			switch( elemento ) {
+				case "F":
+					elemento = "fuego";
+					break;
+				case "A":
+					elemento = "agua";
+					break;
+				case "V":
+					elemento = "volador";
+					break;
+				case "P":
+					elemento = "planta";
+					break;
+			}
+
+			console.log("Elemento: " + elemento);
+			console.log("Habilidad: " + habilidad[ elemento ]);
+
+			$scope.IA.vida -= parseInt( habilidad[ elemento ] * $scope.myTamed.ataque );
+
+			console.log("Ataque: " + parseInt( habilidad[ elemento ] * $scope.myTamed.ataque ));
+
+			turno = evaluarVidas( turno, $scope.myTamed.vida, $scope.IA.vida );
+
+			console.log("mi turno");
+			console.log("Vida de la IA: " + $scope.IA.vida);
+
+
+
+			if( turno == 2 )
+				setTimeout( function() {
+					console.log("su turno");
+					turno--;
+
+					$scope.myTamed.vida -=  $scope.myTamed.vida * habilidad[ $scope.myTamed.elemento_tam ];
+
+					turno = evaluarVidas( turno, $scope.myTamed.vida, $scope.IA.vida );
+
+				}, 2000);
+		}
+	};
+
+	var evaluarVidas = function( turno, vidaMia, vidaTuya ) {
+		if( vidaMia <= 0 || vidaTuya <= 0 )
+			return 3;
+		else
+			return turno;
+	}
+
 }]);
 
 var generateRandomIA = function(tamed, user ) {

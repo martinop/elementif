@@ -37,13 +37,13 @@
 	    	<div class="mtop col s12">
 				<ul class="nomargina">
 					<li>
-						<a class="waves-effect waves-light btn blue mtop">{{myTamed.habilidades[0].nombre_hab}}</a>
-						<a class="waves-effect waves-light btn blue mtop">{{myTamed.habilidades[1].nombre_hab}}</a>
-						<a class="waves-effect waves-light btn brown mtop">{{myTamed.habilidades[2].nombre_hab}}</a>
+						<a class="waves-effect waves-light btn blue mtop" ng-click='ataque(myTamed.habilidades[0])'>{{myTamed.habilidades[0].nombre_hab}}</a>
+						<a class="waves-effect waves-light btn blue mtop" ng-click='ataque(myTamed.habilidades[1])'>{{myTamed.habilidades[1].nombre_hab}}</a>
+						<a class="waves-effect waves-light btn brown mtop" ng-click='ataque(myTamed.habilidades[2])'>{{myTamed.habilidades[2].nombre_hab}}</a>
 					</li>
 
 					<li>
-						<a class="waves-effect waves-light btn brown mtop mbot">{{myTamed.habilidades[3].nombre_hab}}</a>
+						<a class="waves-effect waves-light btn brown mtop mbot" ng-click='ataque(myTamed.habilidades[3])'>{{myTamed.habilidades[3].nombre_hab}}</a>
 						<a class="waves-effect waves-light btn mtop mbot red">Rendirse</a>
 					</li>
 				</ul>
