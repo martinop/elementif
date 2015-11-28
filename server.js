@@ -36,8 +36,6 @@ app.use(express.static(__dirname + '/'));
 
 
 app.post('/signup', function (req, res) {
-    //queryString = "SELECT user_1 FROM usuarios WHERE user_1 = '" + req.body.user_1 + "';";
-    //connection.query(queryString )
     queryString = "\
         SELECT user_1 \
         FROM usuarios \
@@ -51,8 +49,6 @@ app.post('/signup', function (req, res) {
         success.length > 0 ? res.send("Duplicate") : end();
     });
     function end(){
-        //queryString = "INSERT INTO usuarios(user_1,pass) VALUES('"+req.body.user_1+"', '"+req.body.password+"');";
-        //connection.query(queryString)
         queryString = "\
             INSERT INTO usuarios(user_1,pass) \
             VALUES( ?, ? ); \
@@ -71,13 +67,6 @@ app.post('/signup', function (req, res) {
 
 });
 app.get('/login', function (req, res) {
-    //queryString = "SELECT " +
-    //    "user_1, " +
-    //    "id_tam " +
-    //    "FROM usuarios " +
-    //    "WHERE user_1 = '"+req.query.user_1+"' " +
-    //    "AND pass = '"+req.query.password+"';";
-    //connection.query(queryString)
     queryString = "\
         SELECT user_1, id_tam \
         FROM usuarios \
@@ -87,7 +76,7 @@ app.get('/login', function (req, res) {
         req.query.user_1,
         req.query.password
     ];
-    connection.query(queryString)
+    connection.query(queryString, values)
     .then(function(success){
         success.length > 0 ? res.send(success[0]) : res.send("Error");
     }).catch(function(error){
@@ -96,43 +85,38 @@ app.get('/login', function (req, res) {
 });
 
 app.get('/tameds', function (req, res) {
-    //queryString = "SELECT " +
-    //    "id_tam, " +
-    //    "name_tam, " +
-    //    "elemento_tam, " +
-    //    "debilidad_tam, " +
-    //    "vida, " +
-    //    "ataque, " +
-    //    "defensa, " +
-    //    "tamed.precision " +
-    //    "FROM tamed";
-    //Promise.map(connection.query(queryString), function(tamed){
+    queryString = "\
+        SELECT \
+            id_tam, \
+            name_tam, \
+            elemento_tam, \
+            debilidad_tam, \
+            vida, \
+            ataque, \
+            defensa, \
+            tamed.precision \
+        FROM tamed; \
+    ";
+    Promise.map(connection.query(queryString), function(tamed){
         queryString = "\
             SELECT \
-                id_tam, \
-                name_tam, \
-                elemento_tam, \
-                debilidad_tam, \
-                vida, \
-                ataque, \
-                defensa, \
-                tamed.precision \
-            FROM tamed;
+                habilidades.id_hab, \
+                habilidades.nombre_hab, \
+                habilidades.descripcion_hab, \
+                habilidades.fuego, \
+                habilidades.planta, \
+                habilidades.agua, \
+                habilidades.volador \
+            FROM tamed INNER JOIN tamed_hab \
+                ON(tamed_hab.id_tam = tamed.id_tam) INNER JOIN habilidades \
+                ON(habilidades.id_hab = tamed_hab.id_hab) \
+            WHERE tamed.id_tam = ? \
         ";
-    Promise.map(connection.query(queryString), function(tamed){
+        values = [
+            tamed.id_tam
+        ];
         return Promise.all([
-            connection.query("SELECT " +
-                "habilidades.id_hab, " +
-                "habilidades.nombre_hab, " +
-                "habilidades.descripcion_hab, " +
-                "habilidades.fuego, " +
-                "habilidades.agua, " +
-                "habilidades.planta, " +
-                "habilidades.volador " +
-                "FROM tamed INNER JOIN tamed_hab " +
-                    "ON(tamed_hab.id_tam = tamed.id_tam) INNER JOIN habilidades " +
-                    "ON(habilidades.id_hab = tamed_hab.id_hab) " +
-                "WHERE tamed.id_tam = "+tamed.id_tam+";")
+            connection.query(queryString, values)
             .then(function(abilities){
                 tamed.habilidades = abilities;
             })
@@ -148,12 +132,19 @@ app.get('/tameds', function (req, res) {
 });
 
 app.post('/createTamed', function (req, res) {
-    queryString = "UPDATE " +
-        "usuarios SET id_tam = "+req.body.id_tam+", " +
-        "nivel = 1, " +
-        "exp = 0," +
-        "potenciador = "+req.body.potenciador+" " +
-        "WHERE user_1 = '"+req.body.username+"';";
+    queryString = "\
+        UPDATE \
+            usuarios SET id_tam = ?, \
+            nivel = 1, \
+            exp = 0, \
+            potenciador = ? \
+        WHERE user_1 = ?; \
+    ";
+    values = [
+        req.body.id_tam,
+        req.body.potenciador,
+        req.body.username
+    ];
     connection.query(queryString)
     .then(function(success){    // <-- Este succes se puede borrar, te lo dejo a vos
         res.send("Success");
@@ -163,22 +154,27 @@ app.post('/createTamed', function (req, res) {
 });
 
 app.get('/myTamed', function (req, res) {
-    queryString = "SELECT " +
-        "usuarios.nivel, " +
-        "usuarios.exp, " +
-        "usuarios.potenciador, " +
-        "tamed.vida, " +
-        "tamed.ataque, " +
-        "tamed.defensa, " +
-        "tamed.precision, " +
-        "tamed.id_tam, " +
-        "tamed.name_tam, " +
-        "tamed.elemento_tam, " +
-        "tamed.debilidad_tam " +
-        "FROM tamed INNER JOIN usuarios " +
-            "ON(usuarios.id_tam = tamed.id_tam) " +
-        "WHERE user_1 = '"+req.query.user_1+"';";
-    connection.query(queryString)
+    queryString = " \
+        SELECT  \
+            usuarios.nivel,  \
+            usuarios.exp,  \
+            usuarios.potenciador,  \
+            tamed.vida,  \
+            tamed.ataque,  \
+            tamed.defensa,  \
+            tamed.precision,  \
+            tamed.id_tam,  \
+            tamed.name_tam,  \
+            tamed.elemento_tam,  \
+            tamed.debilidad_tam  \
+        FROM tamed INNER JOIN usuarios  \
+            ON(usuarios.id_tam = tamed.id_tam)  \
+        WHERE user_1 = ?; \
+    ";
+    values = [
+        req.query.user_1
+    ];
+    connection.query(queryString, values)
     .then(function(success){
         var myTamed = {
             name_tam : success[0].name_tam,
@@ -194,19 +190,24 @@ app.get('/myTamed', function (req, res) {
             elemento_tam: success[0].elemento_tam,
             habilidades : []
         };
-        queryString = "SELECT " +
-            "habilidades.id_hab, " +
-            "habilidades.nombre_hab, " +
-            "habilidades.descripcion_hab, " +
-            "habilidades.fuego, " +
-            "habilidades.agua, " +
-            "habilidades.planta, " +
-            "habilidades.volador " +
-            "FROM tamed INNER JOIN tamed_hab " +
-                "ON(tamed_hab.id_tam = tamed.id_tam) INNER JOIN habilidades " +
-                "ON(habilidades.id_hab = tamed_hab.id_hab) " +
-            "WHERE tamed.id_tam = "+success[0].id_tam+";";
-        connection.query(queryString)
+        queryString = "\
+            SELECT \
+                habilidades.id_hab, \
+                habilidades.nombre_hab, \
+                habilidades.descripcion_hab, \
+                habilidades.fuego, \
+                habilidades.agua, \
+                habilidades.planta, \
+                habilidades.volador \
+            FROM tamed INNER JOIN tamed_hab \
+                ON(tamed_hab.id_tam = tamed.id_tam) INNER JOIN habilidades \
+                ON(habilidades.id_hab = tamed_hab.id_hab) \
+            WHERE tamed.id_tam = ?; \
+        ";
+        values = [
+            success[0].id_tam
+        ];
+        connection.query(queryString, values)
         .then(function(abilities){
             myTamed.habilidades = abilities;
             res.send(myTamed);
