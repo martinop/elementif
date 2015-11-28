@@ -128,7 +128,7 @@ app.controller('myProfileController', ['$scope', 'Querys','Data','$location',
 		var formData = {
 			id_tam: tamed.id_tam,
 			username: Data.getUser().user_1,
-			potenciador: Math.range(8,12)/10		// Set potenciador in range [0.8 1.2]
+			potenciador: Math.range(80,120)/100		// Set potenciador in range [0.80 1.20]
 		};
 		console.log(formData);
 		Querys.createTamed(formData)
@@ -226,7 +226,7 @@ var generateRandomIA = function(tamed, user ) {
 	tamed.nivel = Math.range(user.nivel-3, user.nivel+3);
 	tamed.nivel = tamed.nivel<=0 ? 1 : tamed.nivel;
 
-	tamed.potenciador = Math.range(2,12)/10;
+	tamed.potenciador = Math.range(80,120)/100;		// Set potenciador in range [0.80 1.20];
 	tamed = potenciar(tamed);
 	return tamed;
 };
