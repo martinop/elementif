@@ -162,10 +162,19 @@ app.controller('battleController', ['$scope', 'Querys','Data','$location', funct
 
 	var turno = 1;
 
+
+	$scope.myTamed.vidaTotal = $scope.myTamed.vida;
+	$scope.IA.vidaTotal = $scope.IA.vida;
+
+	// Porcentaje de vida actual, se comienza con el 100% de la vida
+	$scope.myTamed.vidaActual = 100;
+	$scope.IA.vidaActual = 100;
+
 	$scope.ataque = function( habilidad ) {
 		console.log("IA: " + $scope.IA.vida);
 
 		if( turno == 1 ) {
+
 			turno++;
 			datos.turnos.push( habilidad.id_hab );
 
@@ -199,15 +208,22 @@ app.controller('battleController', ['$scope', 'Querys','Data','$location', funct
 			console.log("Vida de la IA: " + $scope.IA.vida);
 
 
+			// Fin del turno
+			$scope.IA.vidaActual = porcentajeVida( $scope.IA.vida, $scope.IA.vidaTotal );
 
 			if( turno == 2 )
 				setTimeout( function() {
+					var iaHabilidad = $scope.IA.habilidades[ Math.range( 0, 4 ) ]; // Select Random habiliti
 					console.log("su turno");
 					turno--;
 
-					$scope.myTamed.vida -=  $scope.myTamed.vida * habilidad[ $scope.myTamed.elemento_tam ];
+					$scope.myTamed.vida -=  parseInt( habilidad[ elemento ] * $scope.IA.ataque );
 
 					turno = evaluarVidas( turno, $scope.myTamed.vida, $scope.IA.vida );
+					console.log( "hola" );
+
+					// Fin del turno
+					$scope.myTamed.vidaActual = porcentajeVida( $scope.myTamed.vida, $scope.myTamed.vidaTotal );
 
 				}, 2000);
 		}
@@ -232,13 +248,23 @@ var generateRandomIA = function(tamed, user ) {
 };
 
 var potenciar = function(tamed){
-	tamed.ataque = parseInt( tamed.ataque * tamed.potenciador * tamed.nivel );
-	tamed.defensa = parseInt( tamed.defensa * tamed.potenciador * tamed.nivel );
-	tamed.vida = parseInt( tamed.vida * tamed.potenciador * tamed.nivel );
+	tamed.vida = parseInt( tamed.vida * tamed.potenciador + ( tamed.nivel * 20 ) );
+	tamed.ataque = parseInt( tamed.ataque * tamed.potenciador + ( tamed.nivel * 20 ) );
+	tamed.defensa = parseInt( tamed.defensa * tamed.potenciador + ( tamed.nivel * 20 ) );
 	return tamed;
 };
 
+var porcentajeVida = function( vida, vidaTotal ) {
+	var porcentaje = parseInt( (vida * 100) / vidaTotal );
+	if( porcentaje >= 0 )
+		return porcentaje;
+	else
+		return 0;
+};
 
+window.onerror = function() {
+	null;
+};
 
 
 
