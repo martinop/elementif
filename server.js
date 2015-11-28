@@ -3,8 +3,9 @@ var app = express();
 var Promise = require('bluebird');
 var mysql = require('promise-mysql');
 var bodyParser = require('body-parser');
-var queryString;
 var connection;
+var queryString;
+var values;
 
 
 app.listen(3000);
@@ -31,17 +32,36 @@ mysql.createConnection({
 
 app.use(express.static(__dirname + '/'));
 
+//connection.query('UPDATE foo SET key = ?', ['value']);
 
 
 app.post('/signup', function (req, res) {
-    queryString = "SELECT user_1 FROM usuarios WHERE user_1 = '" + req.body.user_1 + "';";
-    connection.query(queryString)
+    //queryString = "SELECT user_1 FROM usuarios WHERE user_1 = '" + req.body.user_1 + "';";
+    //connection.query(queryString )
+    queryString = "\
+        SELECT user_1 \
+        FROM usuarios \
+        WHERE user_1 = ?;\
+    ";
+    values = [
+        req.body.user_1
+    ];
+    connection.query(queryString, values )
     .then(function(success){
         success.length > 0 ? res.send("Duplicate") : end();
     });
     function end(){
-        queryString = "INSERT INTO usuarios(user_1,pass) VALUES('"+req.body.user_1+"', '"+req.body.password+"');";
-        connection.query(queryString)
+        //queryString = "INSERT INTO usuarios(user_1,pass) VALUES('"+req.body.user_1+"', '"+req.body.password+"');";
+        //connection.query(queryString)
+        queryString = "\
+            INSERT INTO usuarios(user_1,pass) \
+            VALUES( ?, ? ); \
+        ";
+        values = [
+            req.body.user_1,
+            req.body.password
+        ];
+        connection.query(queryString, values)
         .then(function(){
             res.send("DONE")
         }).catch(function(error){
@@ -51,12 +71,22 @@ app.post('/signup', function (req, res) {
 
 });
 app.get('/login', function (req, res) {
-    queryString = "SELECT " +
-        "user_1, " +
-        "id_tam " +
-        "FROM usuarios " +
-        "WHERE user_1 = '"+req.query.user_1+"' " +
-        "AND pass = '"+req.query.password+"';";
+    //queryString = "SELECT " +
+    //    "user_1, " +
+    //    "id_tam " +
+    //    "FROM usuarios " +
+    //    "WHERE user_1 = '"+req.query.user_1+"' " +
+    //    "AND pass = '"+req.query.password+"';";
+    //connection.query(queryString)
+    queryString = "\
+        SELECT user_1, id_tam \
+        FROM usuarios \
+        WHERE user_1 = ? AND pass = ?;\
+    ";
+    values = [
+        req.query.user_1,
+        req.query.password
+    ];
     connection.query(queryString)
     .then(function(success){
         success.length > 0 ? res.send(success[0]) : res.send("Error");
@@ -66,16 +96,29 @@ app.get('/login', function (req, res) {
 });
 
 app.get('/tameds', function (req, res) {
-    queryString = "SELECT " +
-        "id_tam, " +
-        "name_tam, " +
-        "elemento_tam, " +
-        "debilidad_tam, " +
-        "vida, " +
-        "ataque, " +
-        "defensa, " +
-        "tamed.precision " +
-        "FROM tamed";
+    //queryString = "SELECT " +
+    //    "id_tam, " +
+    //    "name_tam, " +
+    //    "elemento_tam, " +
+    //    "debilidad_tam, " +
+    //    "vida, " +
+    //    "ataque, " +
+    //    "defensa, " +
+    //    "tamed.precision " +
+    //    "FROM tamed";
+    //Promise.map(connection.query(queryString), function(tamed){
+        queryString = "\
+            SELECT \
+                id_tam, \
+                name_tam, \
+                elemento_tam, \
+                debilidad_tam, \
+                vida, \
+                ataque, \
+                defensa, \
+                tamed.precision \
+            FROM tamed;
+        ";
     Promise.map(connection.query(queryString), function(tamed){
         return Promise.all([
             connection.query("SELECT " +
@@ -107,6 +150,8 @@ app.get('/tameds', function (req, res) {
 app.post('/createTamed', function (req, res) {
     queryString = "UPDATE " +
         "usuarios SET id_tam = "+req.body.id_tam+", " +
+        "nivel = 1, " +
+        "exp = 0," +
         "potenciador = "+req.body.potenciador+" " +
         "WHERE user_1 = '"+req.body.username+"';";
     connection.query(queryString)
