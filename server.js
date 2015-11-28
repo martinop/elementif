@@ -154,66 +154,54 @@ app.post('/createTamed', function (req, res) {
 });
 
 app.get('/myTamed', function (req, res) {
-    queryString = " \
-        SELECT  \
-            usuarios.nivel,  \
-            usuarios.exp,  \
-            usuarios.potenciador,  \
-            tamed.vida,  \
-            tamed.ataque,  \
-            tamed.defensa,  \
-            tamed.precision,  \
-            tamed.id_tam,  \
-            tamed.name_tam,  \
-            tamed.elemento_tam,  \
-            tamed.debilidad_tam  \
-        FROM tamed INNER JOIN usuarios  \
-            ON(usuarios.id_tam = tamed.id_tam)  \
+    queryString = "\
+        SELECT \
+            usuarios.nivel, \
+            usuarios.exp, \
+            usuarios.potenciador, \
+            tamed.vida, \
+            tamed.ataque, \
+            tamed.defensa, \
+            tamed.precision, \
+            tamed.id_tam, \
+            tamed.name_tam, \
+            tamed.elemento_tam, \
+            tamed.debilidad_tam \
+        FROM tamed INNER JOIN usuarios \
+            ON(usuarios.id_tam = tamed.id_tam) \
         WHERE user_1 = ?; \
     ";
     values = [
         req.query.user_1
     ];
     connection.query(queryString, values)
-    .then(function(success){
-        var myTamed = {
-            name_tam : success[0].name_tam,
-            ataque: success[0].ataque,
-            defensa: success[0].defensa,
-            exp: success[0].exp,
-            potenciador: success[0].potenciador,
-            nivel: success[0].nivel,
-            precision: success[0].precision,
-            id_tam: success[0].id_tam,
-            vida: success[0].vida,
-            debilidad_tam: success[0].debilidad_tam,
-            elemento_tam: success[0].elemento_tam,
-            habilidades : []
-        };
-        queryString = "\
-            SELECT \
-                habilidades.id_hab, \
-                habilidades.nombre_hab, \
-                habilidades.descripcion_hab, \
-                habilidades.fuego, \
-                habilidades.agua, \
-                habilidades.planta, \
-                habilidades.volador \
-            FROM tamed INNER JOIN tamed_hab \
-                ON(tamed_hab.id_tam = tamed.id_tam) INNER JOIN habilidades \
-                ON(habilidades.id_hab = tamed_hab.id_hab) \
-            WHERE tamed.id_tam = ?; \
-        ";
-        values = [
-            success[0].id_tam
-        ];
-        connection.query(queryString, values)
-        .then(function(abilities){
-            myTamed.habilidades = abilities;
-            res.send(myTamed);
-        });
+        .then(function(success){
+            var myTamed = success[0];
+            myTamed.habilidades = [];
+            queryString = "\
+                SELECT \
+                    habilidades.id_hab, \
+                    habilidades.nombre_hab, \
+                    habilidades.descripcion_hab, \
+                    habilidades.fuego, \
+                    habilidades.agua, \
+                    habilidades.planta, \
+                    habilidades.volador \
+                FROM tamed INNER JOIN tamed_hab \
+                    ON(tamed_hab.id_tam = tamed.id_tam) INNER JOIN habilidades \
+                    ON(habilidades.id_hab = tamed_hab.id_hab) \
+                WHERE tamed.id_tam = ?; \
+            ";
+            values = [
+                success[0].id_tam
+            ];
+            connection.query(queryString, values)
+                .then(function(abilities){
+                    myTamed.habilidades = abilities;
+                    res.send(myTamed);
+                });
 
-    }).catch(function(error){
+        }).catch(function(error){
         console.log(error);
     });
 });
