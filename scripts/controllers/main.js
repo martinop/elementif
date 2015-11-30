@@ -19,8 +19,6 @@ Math.range = function( a, b ) {
 
 app.config(['$routeProvider', '$httpProvider', '$stateProvider', '$urlRouterProvider', function ($routeProvider, $httpProvider, $stateProvider, $urlRouterProvider) {    
             $urlRouterProvider.otherwise("/home");
-
-
             $stateProvider
                 .state("home", {
                     url: "/home",
@@ -162,24 +160,15 @@ app.controller('battleController', ['$scope', 'Querys','Data','$location', funct
 
 		var turno = 1;
 
-
-		$scope.myTamed.vidaTotal = $scope.myTamed.vida;
-		$scope.IA.vidaTotal = $scope.IA.vida;
-
 		// Porcentaje de vida actual, se comienza con el 100% de la vida
 		$scope.myTamed.vidaActual = 100;
 		$scope.IA.vidaActual = 100;
 
 		$scope.ataque = function( habilidad ) {
-			console.log("IA: " + $scope.IA.vida);
-
 			if( turno == 1 ) {
-
 				turno++;
 				datos.turnos.push( habilidad.id_hab );
-
 				var elemento = $scope.IA.elemento_tam;
-
 				switch( elemento ) {
 					case "F":
 						elemento = "fuego";
@@ -195,37 +184,26 @@ app.controller('battleController', ['$scope', 'Querys','Data','$location', funct
 						break;
 				}
 
-				console.log("Elemento: " + elemento);
-				console.log("Habilidad: " + habilidad[ elemento ]);
-
 				$scope.IA.vida -= parseInt( habilidad[ elemento ] * $scope.myTamed.ataque );
-
-				console.log("Ataque: " + parseInt( habilidad[ elemento ] * $scope.myTamed.ataque ));
-
 				turno = evaluarVidas( turno, $scope.myTamed.vida, $scope.IA.vida );
 
-				console.log("mi turno");
-				console.log("Vida de la IA: " + $scope.IA.vida);
-
-
 				// Fin del turno
-				$scope.IA.vidaActual = porcentajeVida( $scope.IA.vida, $scope.IA.vidaTotal );
-
+				$scope.IA.vidaActual = porcentajeVida( $scope.IA.vida);
+				console.log("IA: " + $scope.IA.vidaActual);
 				if( turno == 2 )
 					setTimeout( function() {
 						var iaHabilidad = $scope.IA.habilidades[ Math.range( 0, 4 ) ]; // Select Random habiliti
-						console.log("su turno");
 						turno--;
 
 						$scope.myTamed.vida -=  parseInt( habilidad[ elemento ] * $scope.IA.ataque );
 
 						turno = evaluarVidas( turno, $scope.myTamed.vida, $scope.IA.vida );
-						console.log( "hola" );
 
 						// Fin del turno
-						$scope.myTamed.vidaActual = porcentajeVida( $scope.myTamed.vida, $scope.myTamed.vidaTotal );
-
-					}, 2000);
+						$scope.myTamed.vidaActual = porcentajeVida( $scope.myTamed.vida);
+						$scope.$apply();
+						console.log("YO: " + $scope.myTamed.vidaActual);
+					}, 1000);
 			}
 		};
 
@@ -255,15 +233,14 @@ var potenciar = function(tamed){
 	return tamed;
 };
 
-var porcentajeVida = function( vida, vidaTotal ) {
-	var porcentaje = parseInt( (vida * 100) / vidaTotal );
+var porcentajeVida = function( vida ) {
+	var porcentaje = parseInt( (vida * 100) / 100 );
 	if( porcentaje >= 0 )
 		return porcentaje;
 	else
 		return 0;
 };
 
-//window.onerror = function() {};
 
 
 
