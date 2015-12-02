@@ -153,8 +153,8 @@ app.controller('battleController', ['$scope', 'Querys','Data','$location', funct
 	}
 	else {
 		var datos = {
-			user_1: $scope.myTamed.user_1,
-			ia: $scope.IA.id_tam,
+			user_1: $scope.myTamed.user_1,		// Hay que asignar el usuario
+			tamed_ia: $scope.IA.id_tam,
 			turnos: []
 		};
 
@@ -164,10 +164,18 @@ app.controller('battleController', ['$scope', 'Querys','Data','$location', funct
 		$scope.myTamed.vidaActual = 100;
 		$scope.IA.vidaActual = 100;
 
+		$scope.myTamed.vidaTotal = $scope.myTamed.vida;
+		$scope.IA.vidaTotal = $scope.IA.vida;
+
 		$scope.ataque = function( habilidad ) {
 			if( turno == 1 ) {
+				console.log("----------------------------------");
+				console.log("Usuario: ");
 				turno++;
 				datos.turnos.push( habilidad.id_hab );
+				console.log("Datos: ");
+				console.log(datos);
+
 				var elemento = $scope.IA.elemento_tam;
 				switch( elemento ) {
 					case "F":
@@ -184,35 +192,108 @@ app.controller('battleController', ['$scope', 'Querys','Data','$location', funct
 						break;
 				}
 
-				$scope.IA.vida -= parseInt( habilidad[ elemento ] * $scope.myTamed.ataque );
-				turno = evaluarVidas( turno, $scope.myTamed.vida, $scope.IA.vida );
+				console.log("Elemento de la IA: " + elemento);
 
-				// Fin del turno
-				$scope.IA.vidaActual = porcentajeVida( $scope.IA.vida);
-				console.log("IA: " + $scope.IA.vidaActual);
-				if( turno == 2 )
-					setTimeout( function() {
-						var iaHabilidad = $scope.IA.habilidades[ Math.range( 0, 4 ) ]; // Select Random habiliti
-						turno--;
-
-						$scope.myTamed.vida -=  parseInt( habilidad[ elemento ] * $scope.IA.ataque );
+				switch ( habilidad.clasificacion_hab ) {
+					case "Ofensivo":
+						console.log("Su vida era: " + $scope.IA.vida);
+						console.log("Ataque con: " + parseInt( habilidad[ elemento ] * $scope.myTamed.ataque ));
+						$scope.IA.vida -= parseInt( habilidad[ elemento ] * $scope.myTamed.ataque );	// Codigo del ataque
+						console.log("Y ahora es: " + $scope.IA.vida);
 
 						turno = evaluarVidas( turno, $scope.myTamed.vida, $scope.IA.vida );
+						console.log("El turno es ahora: " + turno);
 
 						// Fin del turno
-						$scope.myTamed.vidaActual = porcentajeVida( $scope.myTamed.vida);
+						console.log("El porcentaje de vida de la IA era: " + $scope.IA.vidaActual);
+						$scope.IA.vidaActual = porcentajeVida( $scope.IA.vida, $scope.IA.vidaTotal );
+						console.log("El porcentaje de vida de la IA es: " + $scope.IA.vidaActual);
+						break;
+
+					case "Buff":
+						console.log("IA: buff");
+						break;
+
+					case "Desgaste":
+						console.log("IA: desgaste");
+						break;
+
+					case "Debuff":
+						console.log("IA: debuff");
+						break;
+				}
+
+				if( turno == 2 )
+					setTimeout( function() {
+						console.log("----------------------------------");
+						console.log("IA: ");
+						var iaHabilidad = $scope.IA.habilidades[ Math.range( 0, 3 ) ]; // Select Random hab
+						turno--;
+
+						console.log("Habilidad de la IA");
+						console.log( iaHabilidad );
+
+						var elemento = $scope.IA.elemento_tam;
+						switch( elemento ) {
+							case "F":
+								elemento = "fuego";
+								break;
+							case "A":
+								elemento = "agua";
+								break;
+							case "V":
+								elemento = "volador";
+								break;
+							case "P":
+								elemento = "planta";
+								break;
+						}
+
+						console.log("Elemento del usuario: " + elemento);
+
+						switch ( iaHabilidad.clasificacion_hab ) {
+							case "Ofensivo":
+								console.log("Su vida era: " + $scope.myTamed.vida);
+								console.log("Ataque con: " + parseInt( habilidad[ elemento ] * $scope.IA.ataque ));
+								$scope.myTamed.vida -=  parseInt( habilidad[ elemento ] * $scope.IA.ataque );	// Codigo del ataque
+								console.log("Y ahora es: " + $scope.myTamed.vida);
+
+								turno = evaluarVidas( turno, $scope.myTamed.vida, $scope.IA.vida );
+								console.log("El turno es ahora: " + turno);
+
+								// Fin del turno
+								console.log("El porcentaje de vida del usuario era: " + $scope.myTamed.vidaActual);
+								$scope.myTamed.vidaActual = porcentajeVida( $scope.myTamed.vida, $scope.myTamed.vidaTotal );
+								console.log("El porcentaje de vida del usuario es: " + $scope.myTamed.vida);
+								break;
+
+							case "Buff":
+								console.log("IA: buff");
+								break;
+
+							case "Desgaste":
+								console.log("IA: desgaste");
+								break;
+
+							case "Debuff":
+								console.log("IA: debuff");
+								break;
+						}
+
+
 						$scope.$apply();
-						console.log("YO: " + $scope.myTamed.vidaActual);
 					}, 1000);
 			}
 		};
 
-		var evaluarVidas = function( turno, vidaMia, vidaTuya ) {
-			if( vidaMia <= 0 || vidaTuya <= 0 )
+		var evaluarVidas = function( turno, usuarioVida, iaVida ) {
+			if( usuarioVida <= 0 )
 				return 3;
+			else if( iaVida <= 0 )
+				return 4;
 			else
 				return turno;
-		}
+		};
 	}
 
 }]);
@@ -233,8 +314,8 @@ var potenciar = function(tamed){
 	return tamed;
 };
 
-var porcentajeVida = function( vida ) {
-	var porcentaje = parseInt( (vida * 100) / 100 );
+var porcentajeVida = function( vida, vidaTotal ) {
+	var porcentaje = parseInt( (vida * 100) / vidaTotal );
 	if( porcentaje >= 0 )
 		return porcentaje;
 	else
