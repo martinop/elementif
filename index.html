@@ -70,11 +70,33 @@
           </div>
         </div>
     </div>
-    <div class="modal-footer">
-    
-    </div>
   </div>
 
+    <!-- Modal Structure -->
+    <div id="rendirse" class="modal">
+      <div class="modal-content">
+        <h4>Inicio de sesion / Registro</h4>
+        <div class="row">
+          <div class="input-field col s6">
+            <input type="text" class="validate" autofocus ng-model="username">
+            <label >Usuario</label>
+          </div>
+          <div class="input-field col s6">
+            <input type="password" class="validate" ng-model="password">
+            <label >Contraseña</label>
+          </div>
+          <div class="col s4 offset-s2 mtop">
+            <a class="waves-effect waves-light btn green" ng-click="signup()"><i class="material-icons left"></i>Registrarse</a>
+          </div>
+          <div class="col s4 mtop">
+            <a class="waves-effect waves-light btn cyan" ng-click="login()"><i class="material-icons left"></i>Iniciar Sesión</a>
+          </div>
+          <div class="col s4 offset-s4 mtop">
+            <h5>{{stateLogin}}</h5>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 
 

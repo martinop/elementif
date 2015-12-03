@@ -100,6 +100,7 @@ app.controller('myProfileController', ['$scope', 'Querys','Data','$location',
 	.then(function(success){
 		$scope.tameds = success.data;
 		Data.setTameds(success.data);
+		console.log($scope.tameds);
 	}).catch(function(error){
 		console.log(error);
 	});
@@ -109,6 +110,7 @@ app.controller('myProfileController', ['$scope', 'Querys','Data','$location',
 		.then(function(success){
 			$scope.myTamed = potenciar(success.data);
 			$scope.loading = false;
+			console.log($scope.myTamed);
 			Data.setTamed($scope.myTamed);
 		}).catch(function(error){
 			console.log(error);
@@ -121,14 +123,16 @@ app.controller('myProfileController', ['$scope', 'Querys','Data','$location',
 	if(!$scope.myUser){
 		$location.path('/home');
 	}
+
 	$scope.selectTamed = function(tamed){
 		$scope.configuring = true;
 		var formData = {
 			id_tam: tamed.id_tam,
 			username: Data.getUser().user_1,
 			potenciador: Math.range(80,120)/100		// Set potenciador in range [0.80 1.20]
-		};
-		console.log(formData);
+		}
+		tamed.potenciador = formData.potenciador;
+		tamed.nivel = 1;
 		Querys.createTamed(formData)
 		.then(function(success){
 			$scope.configuring = false;
@@ -142,6 +146,7 @@ app.controller('myProfileController', ['$scope', 'Querys','Data','$location',
 }]);
 
 app.controller('battleController', ['$scope', 'Querys','Data','$location', function ($scope, Querys, Data, $location) {
+	$scope.turno = 1;
 	$scope.tameds = Data.getTameds() || false;
 	$scope.myTamed  = Data.getTamed() || false;
 	if($scope.tameds) {
@@ -158,8 +163,6 @@ app.controller('battleController', ['$scope', 'Querys','Data','$location', funct
 			turnos: []
 		};
 
-		var turno = 1;
-
 		// Porcentaje de vida actual, se comienza con el 100% de la vida
 		$scope.myTamed.vidaActual = 100;
 		$scope.IA.vidaActual = 100;
@@ -168,41 +171,36 @@ app.controller('battleController', ['$scope', 'Querys','Data','$location', funct
 		$scope.IA.vidaTotal = $scope.IA.vida;
 
 		$scope.ataque = function( habilidad ) {
-			if( turno == 1 ) {
+			if( $scope.turno == 1 ) {
 				console.log("----------------------------------");
 				console.log("Usuario: ");
-				turno++;
+				$scope.turno++;
 				datos.turnos.push( habilidad.id_hab );
 				console.log("Datos: ");
 				console.log(datos);
 
 				var elemento = $scope.IA.elemento_tam;
-				switch( elemento ) {
-					case "F":
-						elemento = "fuego";
-						break;
-					case "A":
-						elemento = "agua";
-						break;
-					case "V":
-						elemento = "volador";
-						break;
-					case "P":
-						elemento = "planta";
-						break;
-				}
 
 				console.log("Elemento de la IA: " + elemento);
 
 				switch ( habilidad.clasificacion_hab ) {
 					case "Ofensivo":
 						console.log("Su vida era: " + $scope.IA.vida);
-						console.log("Ataque con: " + parseInt( habilidad[ elemento ] * $scope.myTamed.ataque ));
-						$scope.IA.vida -= parseInt( habilidad[ elemento ] * $scope.myTamed.ataque );	// Codigo del ataque
+
+						var ataque = parseInt( habilidad[ elemento ] + $scope.myTamed.ataque - $scope.IA.defensa );
+							
+						console.log("habilidad: " + habilidad[ elemento ] );
+						console.log("ataque fisico: " + $scope.myTamed.ataque );
+						console.log("defensa fisico: " + $scope.IA.defensa );
+						console.log(ataque);
+						if( ataque <= 0 )
+							ataque = 1;
+						console.log("Ataque con: " + ataque );
+						$scope.IA.vida -= ataque;	// Codigo del ataque
 						console.log("Y ahora es: " + $scope.IA.vida);
 
-						turno = evaluarVidas( turno, $scope.myTamed.vida, $scope.IA.vida );
-						console.log("El turno es ahora: " + turno);
+						$scope.turno = evaluarVidas( $scope.turno, $scope.myTamed.vida, $scope.IA.vida );
+						console.log("El turno es ahora: " + $scope.turno);
 
 						// Fin del turno
 						console.log("El porcentaje de vida de la IA era: " + $scope.IA.vidaActual);
@@ -223,43 +221,39 @@ app.controller('battleController', ['$scope', 'Querys','Data','$location', funct
 						break;
 				}
 
-				if( turno == 2 )
+				if( $scope.turno == 2 )
 					setTimeout( function() {
 						console.log("----------------------------------");
 						console.log("IA: ");
 						var iaHabilidad = $scope.IA.habilidades[ Math.range( 0, 3 ) ]; // Select Random hab
-						turno--;
+						$scope.turno--;
 
 						console.log("Habilidad de la IA");
 						console.log( iaHabilidad );
 
-						var elemento = $scope.IA.elemento_tam;
-						switch( elemento ) {
-							case "F":
-								elemento = "fuego";
-								break;
-							case "A":
-								elemento = "agua";
-								break;
-							case "V":
-								elemento = "volador";
-								break;
-							case "P":
-								elemento = "planta";
-								break;
-						}
+						var elemento = $scope.myTamed.elemento_tam;
 
 						console.log("Elemento del usuario: " + elemento);
 
 						switch ( iaHabilidad.clasificacion_hab ) {
 							case "Ofensivo":
 								console.log("Su vida era: " + $scope.myTamed.vida);
-								console.log("Ataque con: " + parseInt( habilidad[ elemento ] * $scope.IA.ataque ));
-								$scope.myTamed.vida -=  parseInt( habilidad[ elemento ] * $scope.IA.ataque );	// Codigo del ataque
+
+								var ataque = parseInt( habilidad[ elemento ] + $scope.IA.ataque - $scope.myTamed.defensa );
+
+								console.log("habilidad: " +  habilidad[ elemento ] );
+								console.log("ataque fisico: " + $scope.IA.ataque );
+								console.log("defensa fisico: " + $scope.myTamed.defensa );
+								console.log(ataque);
+
+								if( ataque <= 0 )
+									ataque = 1;
+								console.log("Ataque con: " + ataque );
+								$scope.myTamed.vida -= ataque;	// Codigo del ataque
 								console.log("Y ahora es: " + $scope.myTamed.vida);
 
-								turno = evaluarVidas( turno, $scope.myTamed.vida, $scope.IA.vida );
-								console.log("El turno es ahora: " + turno);
+								$scope.turno = evaluarVidas( $scope.turno, $scope.myTamed.vida, $scope.IA.vida );
+								console.log("El turno es ahora: " + $scope.turno);
 
 								// Fin del turno
 								console.log("El porcentaje de vida del usuario era: " + $scope.myTamed.vidaActual);

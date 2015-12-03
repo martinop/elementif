@@ -15,14 +15,14 @@ app.use(bodyParser.urlencoded({
 app.use(bodyParser.json());
 
 mysql.createConnection({
-    host: 'db4free.net',
-    user: 'zaddler01',
-    password: '123456',
-    database: 'pokemondb'
-    //host: '127.0.0.1',
-    //user: 'root',
-    //password: '',
+    //host: 'db4free.net',
+    //user: 'zaddler01',
+    //password: '123456',
     //database: 'pokemondb'
+    host: '127.0.0.1',
+    user: 'root',
+    password: '',
+    database: 'pokemondb'
 }).then(function(success){
     console.log("Conectado");
     connection = success;
@@ -87,7 +87,7 @@ app.get('/login', function (req, res) {
 app.get('/tameds', function (req, res) {
     queryString = "\
         SELECT \
-            id_tam, \
+            tamed.id_tam, \
             name_tam, \
             elemento_tam, \
             debilidad_tam, \
@@ -95,7 +95,7 @@ app.get('/tameds', function (req, res) {
             ataque, \
             defensa, \
             tamed.precision \
-        FROM tamed; \
+        FROM tamed \
     ";
     Promise.map(connection.query(queryString), function(tamed){
         queryString = "\
@@ -106,7 +106,7 @@ app.get('/tameds', function (req, res) {
                 habilidades.fuego, \
                 habilidades.planta, \
                 habilidades.agua, \
-                habilidades.volador, \
+                habilidades.viento, \
                 habilidades.clasificacion_hab \
             FROM tamed INNER JOIN tamed_hab \
                 ON(tamed_hab.id_tam = tamed.id_tam) INNER JOIN habilidades \
@@ -126,6 +126,7 @@ app.get('/tameds', function (req, res) {
         });
 
     }).then(function(success){
+        console.log(success)
         res.send(success);
     }).catch(function(error){
         console.log(error);
@@ -187,7 +188,7 @@ app.get('/myTamed', function (req, res) {
                     habilidades.fuego, \
                     habilidades.agua, \
                     habilidades.planta, \
-                    habilidades.volador, \
+                    habilidades.viento, \
                     habilidades.clasificacion_hab \
                 FROM tamed INNER JOIN tamed_hab \
                     ON(tamed_hab.id_tam = tamed.id_tam) INNER JOIN habilidades \
