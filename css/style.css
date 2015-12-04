@@ -50,7 +50,7 @@ p{
 	margin-left: 40px;
 }
 .row{
-	margin-bottom: 0px;
+	margin-bottom: 0;
 }
 .fullwidth{
 	width: 100% !important;
@@ -62,8 +62,7 @@ p{
 }
 .arena{
 	background-image: url("arena.png");
-	background-size: 100% 100%;	
-
+	background-size: 100% 100%;
 }
 
 .opciones {
@@ -85,6 +84,7 @@ p{
 .vida{
 	width: 220px;
 	height: 30px;
+	margin: 0;
 }
 
 .vidaPercentage{
@@ -117,4 +117,13 @@ p{
 
 .pbot{
 	padding-bottom: 50px !important;
+}
+
+.nameTam {
+	margin-bottom: 0;
+}
+
+.vidaText {
+	margin-bottom: 0;
+	text-align: right;
 }
