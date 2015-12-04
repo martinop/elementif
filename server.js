@@ -15,14 +15,14 @@ app.use(bodyParser.urlencoded({
 app.use(bodyParser.json());
 
 mysql.createConnection({
-    //host: 'db4free.net',
-    //user: 'zaddler01',
-    //password: '123456',
-    //database: 'pokemondb'
-    host: '127.0.0.1',
-    user: 'root',
-    password: '',
+    host: 'db4free.net',
+    user: 'zaddler01',
+    password: '123456',
     database: 'pokemondb'
+    //host: '127.0.0.1',
+    //user: 'root',
+    //password: '',
+    //database: 'pokemondb'
 }).then(function(success){
     console.log("Conectado");
     connection = success;
