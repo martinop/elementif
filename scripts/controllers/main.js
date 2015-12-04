@@ -150,7 +150,8 @@ app.controller('battleController', ['$scope', 'Querys','Data','$location', funct
 	$scope.tameds = Data.getTameds() || false;
 	$scope.myTamed  = Data.getTamed() || false;
 	if($scope.tameds) {
-		var tamed = $scope.tameds[parseInt((Math.random() * 10) % 4)]; 		// Set random Tamed;
+		//var tamed = $scope.tameds[parseInt((Math.random() * 10) % $scope.tameds.length + 1)]; 		// Set random Tamed;
+		var tamed = $scope.tameds[Math.range(0, $scope.tameds.length - 1 )]; 		// Set random Tamed;
 		$scope.IA = generateRandomIA( tamed, $scope.myTamed );
 	}
 	if(!$scope.myTamed){
@@ -197,6 +198,9 @@ app.controller('battleController', ['$scope', 'Querys','Data','$location', funct
 							ataque = 1;
 						console.log("Ataque con: " + ataque );
 						$scope.IA.vida -= ataque;	// Codigo del ataque
+						if( $scope.IA.vida < 0 )
+							$scope.IA.vida = 0;
+
 						console.log("Y ahora es: " + $scope.IA.vida);
 
 						$scope.turno = evaluarVidas( $scope.turno, $scope.myTamed.vida, $scope.IA.vida );
@@ -250,6 +254,9 @@ app.controller('battleController', ['$scope', 'Querys','Data','$location', funct
 									ataque = 1;
 								console.log("Ataque con: " + ataque );
 								$scope.myTamed.vida -= ataque;	// Codigo del ataque
+								if( $scope.myTamed.vida < 0 )
+									$scope.myTamed.vida = 0;
+
 								console.log("Y ahora es: " + $scope.myTamed.vida);
 
 								$scope.turno = evaluarVidas( $scope.turno, $scope.myTamed.vida, $scope.IA.vida );
