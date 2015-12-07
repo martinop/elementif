@@ -15,9 +15,8 @@ Math.range = function( a, b ) {
 	return Math.floor(Math.random() * (max - min + 1)) + min;
 };
 
-
-
-app.config(['$routeProvider', '$httpProvider', '$stateProvider', '$urlRouterProvider', function ($routeProvider, $httpProvider, $stateProvider, $urlRouterProvider) {    
+app.config(['$routeProvider', '$httpProvider', '$stateProvider', '$urlRouterProvider',
+	function ($routeProvider, $httpProvider, $stateProvider, $urlRouterProvider) {    
             $urlRouterProvider.otherwise("/home");
             $stateProvider
                 .state("home", {
@@ -91,7 +90,8 @@ app.controller('sesionController', ['$scope', 'Querys','Data','$location',
 	}
 }]);
 
-app.controller('battleController', ['$scope', 'Querys','Data','$location', function ($scope, Querys, Data, $location) {
+app.controller('battleController', ['$scope', 'Querys','Data','$location',
+	function ($scope, Querys, Data, $location) {
 	"use strict";
 	$scope.turno = 1;
 	$scope.tameds = Data.getTameds() || false;
@@ -634,7 +634,6 @@ app.controller('battleController', ['$scope', 'Querys','Data','$location', funct
 						else if( existAnotherBuff )
 							return anotherBuffAtaque;
 						else {
-							// TODO: Atacamos con nuestra habilidad mas fuerte
 							return powerfulHab( user, "Ofensivo" );
 						}
 					}
