@@ -15,9 +15,8 @@ Math.range = function( a, b ) {
 	return Math.floor(Math.random() * (max - min + 1)) + min;
 };
 
-
-
-app.config(['$routeProvider', '$httpProvider', '$stateProvider', '$urlRouterProvider', function ($routeProvider, $httpProvider, $stateProvider, $urlRouterProvider) {    
+app.config(['$routeProvider', '$httpProvider', '$stateProvider', '$urlRouterProvider',
+	function ($routeProvider, $httpProvider, $stateProvider, $urlRouterProvider) {    
             $urlRouterProvider.otherwise("/home");
             $stateProvider
                 .state("home", {
@@ -91,14 +90,14 @@ app.controller('sesionController', ['$scope', 'Querys','Data','$location',
 	}
 }]);
 
-app.controller('battleController', ['$scope', 'Querys','Data','$location', function ($scope, Querys, Data, $location) {
+app.controller('battleController', ['$scope', 'Querys','Data','$location',
+	function ($scope, Querys, Data, $location) {
 	"use strict";
 	$scope.estado = "In game";
 	$scope.turno = 1;
 	$scope.tameds = Data.getTameds() || false;
 	$scope.myTamed  = Data.getTamed() || false;
 	if($scope.tameds) {
-		//var tamed = $scope.tameds[parseInt((Math.random() * 10) % $scope.tameds.length + 1)]; 		// Set random Tamed;
 		var tamed = $scope.tameds[Math.range(0, $scope.tameds.length - 1 )]; 		// Set random Tamed;
 		$scope.IA = generateRandomIA( tamed, $scope.myTamed );
 	}
@@ -107,12 +106,14 @@ app.controller('battleController', ['$scope', 'Querys','Data','$location', funct
 	}
 	else {
 		var datos = {
-			user_1: $scope.myTamed.user_1,		// Hay que asignar el usuario
-			tamed_ia: $scope.IA.id_tam,
-			turnos: []
+			user_1: $scope.myUser.user_1,		// Hay que asignar el usuario
+			contador: []
 		};
 
-		var popularHab = [ null, null, null, null];	// Habilidades mas usadas por el usuario
+		var popularHab = [null, null, null, null];	// Habilidades mas usadas por el usuario
+
+		for( let i = 0; i < 4; i++ )
+			datos.contador[ $scope.myTamed.habilidades[i].id_hab ] = 0;
 
 		// Porcentaje de vida actual, se comienza con el 100% de la vida
 		$scope.myTamed.vidaActual = 100;
@@ -129,7 +130,7 @@ app.controller('battleController', ['$scope', 'Querys','Data','$location', funct
 				console.log("----------------------------------");
 				console.log("Usuario: ");
 				$scope.turno++;
-				datos.turnos.push( habilidad.id_hab );
+				datos.contador[ habilidade.id_hab ]++;
 				console.log("Datos: ");
 				console.log(datos);
 
@@ -208,7 +209,7 @@ app.controller('battleController', ['$scope', 'Querys','Data','$location', funct
 				$scope.turno == 4 ? $scope.estado = "Ganaste" : $scope.estado;
 				console.log($scope.estado);
 				if( $scope.turno == 2 ) {
-					setTimeout( function() {
+					var iaAtaque = function() {
 						console.log("----------------------------------");
 						console.log("IA: ");
 						//var habilidad = $scope.IA.habilidades[ Math.range( 0, 3 ) ]; // Select Random hab
@@ -293,7 +294,12 @@ app.controller('battleController', ['$scope', 'Querys','Data','$location', funct
 						$scope.turno == 4 ? $scope.estado = "Ganaste" : $scope.estado;
 						console.log($scope.estado);
 						$scope.$apply();
+<<<<<<< HEAD
 					}, 2000);
+=======
+					};
+					setTimeout( iaAtaque, 1000);
+>>>>>>> origin/master
 				}
 			}
 		};
@@ -640,7 +646,6 @@ app.controller('battleController', ['$scope', 'Querys','Data','$location', funct
 						else if( existAnotherBuff )
 							return anotherBuffAtaque;
 						else {
-							// TODO: Atacamos con nuestra habilidad mas fuerte
 							return powerfulHab( user, "Ofensivo" );
 						}
 					}

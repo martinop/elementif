@@ -1,29 +1,30 @@
-app.factory('Data', ['$http', '$localStorage', function () {
-            var myUser, myTamed, tameds;
-            return {
-                setUser: function (data) {
-                    myUser = data;
-                },
-                getUser: function () {
-                    return myUser;
-                },
-                getTamed: function () {
-                    return myTamed;
-                },
-                setTameds: function (data) {
-                    tameds = data;
-                },
-                getTameds: function () {
-                    return tameds;
-                },
-                setTamed: function (data) {
-                    myTamed = data;
-                }
-            };
+app.factory('Data', ['$http', '$localStorage',
+    function () {
+        var myUser, myTamed, tameds;
+        return {
+            setUser: function (data) {
+                myUser = data;
+            },
+            getUser: function () {
+                return myUser;
+            },
+            getTamed: function () {
+                return myTamed;
+            },
+            setTameds: function (data) {
+                tameds = data;
+            },
+            getTameds: function () {
+                return tameds;
+            },
+            setTamed: function (data) {
+                myTamed = data;
+            }
+        };
     }
 ]);
-app.factory('Querys', ['$http', '$localStorage','Data', function ($http, $localStorage, Data) {
-
+app.factory('Querys', ['$http', '$localStorage','Data',
+    function ($http, $localStorage, Data) {
         return {
             signup: function (data) {
                 return $http.post('/signup', data);

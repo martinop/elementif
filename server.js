@@ -32,9 +32,6 @@ mysql.createConnection({
 
 app.use(express.static(__dirname + '/'));
 
-//connection.query('UPDATE foo SET key = ?', ['value']);
-
-
 app.post('/signup', function (req, res) {
     queryString = "\
         SELECT user_1 \
@@ -126,7 +123,7 @@ app.get('/tameds', function (req, res) {
         });
 
     }).then(function(success){
-        console.log(success)
+        console.log(success);
         res.send(success);
     }).catch(function(error){
         console.log(error);
