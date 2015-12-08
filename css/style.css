@@ -2,7 +2,9 @@
 	width: 250px;
 	height: 70px;
 }
-
+.toast{
+	background: rgba(1,1,1,0.5);
+}
 .toast-ia{
 	left: -620px;
 	top: 155px !important;
