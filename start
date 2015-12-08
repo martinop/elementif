@@ -1,0 +1,14 @@
+#!/bin/sh
+mkdir -p /home/miguelob/webapps/elementif/run
+pid=$(/sbin/pidof /home/miguelob/webapps/elementif/bin/node)
+if echo "$pid" | grep -q " "; then
+  pid=""
+fi
+if [ -n "$pid" ]; then
+  user=$(ps -p $pid -o user | tail -n 1)
+  if [ $user = "miguelob" ]; then
+    exit 0
+  fi
+fi
+nohup /home/miguelob/webapps/elementif/bin/node /home/miguelob/webapps/elementif/server.js > /dev/null 2>&1 &
+/sbin/pidof /home/miguelob/webapps/elementif/bin/node > /home/miguelob/webapps/elementif/run/node.pid

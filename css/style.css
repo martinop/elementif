@@ -3,6 +3,14 @@
 	height: 70px;
 }
 
+.toast-ia{
+	left: -620px;
+	top: 155px !important;
+}
+.toast-user{
+	left:-500px;
+	top: 360px !important;
+}
 .fullscreen{
 	width: 100%;
 }

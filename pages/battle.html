@@ -39,7 +39,7 @@
 	    <div class="col s4 cyan">
 	    	<h5 class="center-align white-text">Opciones</h5>
 	    </div>
-	    <div class="col s4  cyan lighten-4 opciones center-align mbot">
+	    <div class="col s4  cyan lighten-4 opciones center-align">
 	    	<div class="mtop col s12">
 
 				<ul class="nomargina" ng-hide="turno != 1">
@@ -62,16 +62,16 @@
 				</ul>
 				<ul class="nomargina" ng-show="turno != 1">
 					<li>
-						<a class="waves-effect waves-light btn blue mtop" ng-click='ataque(myTamed.habilidades[0])'>{{myTamed.habilidades[0].nombre_hab}}</a>
+						<a class="waves-effect waves-light btn blue mtop disabled" ng-click='ataque(myTamed.habilidades[0])'>{{myTamed.habilidades[0].nombre_hab}}</a>
 					</li>
 					<li>
-						<a class="waves-effect waves-light btn blue mtop" ng-click='ataque(myTamed.habilidades[1])'>{{myTamed.habilidades[1].nombre_hab}}</a>
+						<a class="waves-effect waves-light btn blue mtop disabled" ng-click='ataque(myTamed.habilidades[1])'>{{myTamed.habilidades[1].nombre_hab}}</a>
 					</li>
 					<li>
-						<a class="waves-effect waves-light btn brown mtop" ng-click='ataque(myTamed.habilidades[2])'>{{myTamed.habilidades[2].nombre_hab}}</a>
+						<a class="waves-effect waves-light btn brown mtop disabled" ng-click='ataque(myTamed.habilidades[2])'>{{myTamed.habilidades[2].nombre_hab}}</a>
 					</li>
 					<li>
-						<a class="waves-effect waves-light btn brown mtop" ng-click='ataque(myTamed.habilidades[3])'>{{myTamed.habilidades[3].nombre_hab}}</a>
+						<a class="waves-effect waves-light btn brown mtop disabled" ng-click='ataque(myTamed.habilidades[3])'>{{myTamed.habilidades[3].nombre_hab}}</a>
 					</li>
 					<li>
 						<a class="waves-effect waves-light btn mtop mbot red modal-trigger" href="" data-target="rendirse">Rendirse</a>

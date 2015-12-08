@@ -93,6 +93,7 @@ app.controller('sesionController', ['$scope', 'Querys','Data','$location',
 
 app.controller('battleController', ['$scope', 'Querys','Data','$location', function ($scope, Querys, Data, $location) {
 	"use strict";
+	$scope.estado = "In game";
 	$scope.turno = 1;
 	$scope.tameds = Data.getTameds() || false;
 	$scope.myTamed  = Data.getTamed() || false;
@@ -124,6 +125,7 @@ app.controller('battleController', ['$scope', 'Querys','Data','$location', funct
 
 		$scope.ataque = function( habilidad ) {
 			if( $scope.turno == 1 ) {
+				Materialize.toast(habilidad.nombre_hab, 2000, "toast-user")
 				console.log("----------------------------------");
 				console.log("Usuario: ");
 				$scope.turno++;
@@ -202,7 +204,9 @@ app.controller('battleController', ['$scope', 'Querys','Data','$location', funct
 				$scope.IA = debuffHab( $scope.IA, elemento,habDuration );
 
 				$scope.turno = evaluarVidas( $scope.turno, $scope.myTamed.vida, $scope.IA.vida );
-
+				$scope.turno == 3 ? $scope.estado = "Perdiste" : $scope.estado;
+				$scope.turno == 4 ? $scope.estado = "Ganaste" : $scope.estado;
+				console.log($scope.estado);
 				if( $scope.turno == 2 ) {
 					setTimeout( function() {
 						console.log("----------------------------------");
@@ -215,7 +219,7 @@ app.controller('battleController', ['$scope', 'Querys','Data','$location', funct
 
 						console.log("Habilidad de la IA");
 						console.log( iaHabilidad );
-
+						Materialize.toast(iaHabilidad.nombre_hab, 2000, "toast-ia")
 						console.log("Elemento de la IA: " + elemento);
 
 						switch ( iaHabilidad.clasificacion_hab ) {
@@ -285,9 +289,11 @@ app.controller('battleController', ['$scope', 'Querys','Data','$location', funct
 						$scope.myTamed = debuffHab( $scope.myTamed, elemento, habDuration );
 
 						$scope.turno = evaluarVidas( $scope.turno, $scope.myTamed.vida, $scope.IA.vida );
-
+						$scope.turno == 3 ? $scope.estado = "Perdiste" : $scope.estado;
+						$scope.turno == 4 ? $scope.estado = "Ganaste" : $scope.estado;
+						console.log($scope.estado);
 						$scope.$apply();
-					}, 1000);
+					}, 2000);
 				}
 			}
 		};
