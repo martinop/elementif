@@ -58,7 +58,6 @@ app.controller('sesionController', ['$scope', 'Querys','Data','$location',
 				$scope.stateLogin = "Error Autenticando"
 			}
 		}).catch(function(error){
-			console.log(error);
 		});
 	};
 
@@ -79,7 +78,6 @@ app.controller('sesionController', ['$scope', 'Querys','Data','$location',
 				$scope.stateLogin = "Error Autenticando";
 			}
 		}).catch(function(error){
-			console.log(error);
 		});
 	};
 
@@ -98,7 +96,6 @@ app.controller('battleController', ['$scope', 'Querys','Data','$location', funct
 	$scope.tameds = Data.getTameds() || false;
 	$scope.myTamed  = Data.getTamed() || false;
 	if($scope.tameds) {
-		//var tamed = $scope.tameds[parseInt((Math.random() * 10) % $scope.tameds.length + 1)]; 		// Set random Tamed;
 		var tamed = $scope.tameds[Math.range(0, $scope.tameds.length - 1 )]; 		// Set random Tamed;
 		$scope.IA = generateRandomIA( tamed, $scope.myTamed );
 	}
@@ -123,77 +120,43 @@ app.controller('battleController', ['$scope', 'Querys','Data','$location', funct
 
 		var habDuration = 4;
 
+        Materialize.toast("TE DESTRUIRE!", 2000, "toast-ia");
+
 		$scope.ataque = function( habilidad ) {
 			if( $scope.turno == 1 ) {
-				Materialize.toast(habilidad.nombre_hab, 2000, "toast-user")
-				console.log("----------------------------------");
-				console.log("Usuario: ");
 				$scope.turno++;
 				datos.turnos.push( habilidad.id_hab );
-				console.log("Datos: ");
-				console.log(datos);
 
 				let elemento = $scope.myTamed.elemento_tam;
 
-				console.log("Elemento del usuario: " + elemento);
-
 				switch ( habilidad.clasificacion_hab ) {
 					case "Ofensivo":
-						console.log("Su vida era: " + $scope.IA.vida);
 
 						let damage = calculateDmg( $scope.myTamed.ataque, $scope.IA.defensa, habilidad[ elemento ] );
 
-						console.log("habilidad: " + habilidad[ elemento ] );
-						console.log("ataque fisico: " + $scope.myTamed.ataque );
-						console.log("defensa fisico: " + $scope.IA.defensa );
-						console.log(damage);
+                        Materialize.toast(habilidad.nombre_hab + ": " + damage, 2000, "toast-user");
 
-						console.log("Ataque con: " + damage );
 						$scope.IA.vida = hurt( $scope.IA.vida, damage );	// Codigo del ataque
 
-						console.log("Y ahora es: " + $scope.IA.vida);
 
 						$scope.turno = evaluarVidas( $scope.turno, $scope.myTamed.vida, $scope.IA.vida );
-						console.log("El turno es ahora: " + $scope.turno);
 
 						// Fin del turno
-						console.log("El porcentaje de vida de la IA era: " + $scope.IA.vidaActual);
 						$scope.IA.vidaActual = porcentajeVida( $scope.IA.vida, $scope.IA.vidaTotal );
-						console.log("El porcentaje de vida de la IA es: " + $scope.IA.vidaActual);
 						break;
 
 					case "Buff de ataque":
-						console.log("IA: Buff de ataque");
-						if( !habilidad.sleep )
-							habilidad.sleep = habDuration;
-						break;
-
 					case "Buff de defensa":
-						console.log("IA: Buff de defensa");
-						if( !habilidad.sleep )
-							habilidad.sleep = habDuration;
-						break;
-
 					case "Debuff de ataque":
-						console.log("IA: Debuff de ataque");
-						if( !habilidad.sleep )
-							habilidad.sleep = habDuration;
-						break;
-
 					case "Debuff de defensa":
-						console.log("IA: Debuff de defensa");
-						if( !habilidad.sleep )
-							habilidad.sleep = habDuration;
-						break;
-
 					case "Desgaste":
-						console.log("IA: Desgaste");
-						if( !habilidad.sleep )
+						if( !habilidad.sleep ) {
 							habilidad.sleep = habDuration;
+                            Materialize.toast(habilidad.nombre_hab + ": " + habilidad[elemento], 2000, "toast-user");
+                        }
 						break;
 
 					case "Recuperacion":
-						console.log("IA: Recuperacion");
 						$scope.myTamed.vida = recoverLife( $scope.myTamed.vida, $scope.myTamed.vidaTotal, habilidad[ elemento ] );
 						$scope.myTamed.vidaActual = porcentajeVida( $scope.myTamed.vida, $scope.myTamed.vidaTotal );
 						break;
@@ -206,80 +169,46 @@ app.controller('battleController', ['$scope', 'Querys','Data','$location', funct
 				$scope.turno = evaluarVidas( $scope.turno, $scope.myTamed.vida, $scope.IA.vida );
 				$scope.turno == 3 ? $scope.estado = "Perdiste" : $scope.estado;
 				$scope.turno == 4 ? $scope.estado = "Ganaste" : $scope.estado;
-				console.log($scope.estado);
 				if( $scope.turno == 2 ) {
-					setTimeout( function() {
-						console.log("----------------------------------");
-						console.log("IA: ");
+					var iaAtaque = function() {
 						//var habilidad = $scope.IA.habilidades[ Math.range( 0, 3 ) ]; // Select Random hab
 						let iaHabilidad = ArtificialInteligent( $scope.myTamed, $scope.IA ); // Select hab
+						console.log(iaHabilidad);
 						$scope.turno--;
 
 						let elemento = $scope.IA.elemento_tam;
 
-						console.log("Habilidad de la IA");
-						console.log( iaHabilidad );
-						Materialize.toast(iaHabilidad.nombre_hab, 2000, "toast-ia")
-						console.log("Elemento de la IA: " + elemento);
-
 						switch ( iaHabilidad.clasificacion_hab ) {
 							case "Ofensivo":
-								console.log("Su vida era: " + $scope.myTamed.vida);
 
 								let damage = calculateDmg( $scope.IA.ataque, $scope.myTamed.defensa, iaHabilidad[ elemento ] );
 
-								console.log("iaHabilidad: " +  iaHabilidad[ elemento ] );
-								console.log("ataque fisico: " + $scope.IA.ataque );
-								console.log("defensa fisico: " + $scope.myTamed.defensa );
-								console.log(damage);
+								Materialize.toast(iaHabilidad.nombre_hab + ": " + damage, 2000, "toast-ia");
 
-								console.log("Ataque con: " + damage );
 								$scope.myTamed.vida = hurt( $scope.myTamed.vida, damage );	// Codigo del ataque
 
-								console.log("Y ahora es: " + $scope.myTamed.vida);
 
 								$scope.turno = evaluarVidas( $scope.turno, $scope.myTamed.vida, $scope.IA.vida );
-								console.log("El turno es ahora: " + $scope.turno);
 
 								// Fin del turno
-								console.log("El porcentaje de vida del usuario era: " + $scope.myTamed.vidaActual);
 								$scope.myTamed.vidaActual = porcentajeVida( $scope.myTamed.vida, $scope.myTamed.vidaTotal );
-								console.log("El porcentaje de vida del usuario es: " + $scope.myTamed.vida);
 								break;
 
 							case "Buff de ataque":
-								console.log("IA: Buff de ataque");
-								if( !iaHabilidad.sleep )
-									iaHabilidad.sleep = habDuration;
-								break;
-
 							case "Buff de defensa":
-								console.log("IA: Buff de defensa");
-								if( !iaHabilidad.sleep )
-									iaHabilidad.sleep = habDuration;
-								break;
-
 							case "Debuff de ataque":
-								console.log("IA: Debuff de ataque");
-								if( !iaHabilidad.sleep )
-									iaHabilidad.sleep = habDuration;
-								break;
-
 							case "Debuff de defensa":
-								console.log("IA: Debuff de defensa");
-								if( !iaHabilidad.sleep )
-									iaHabilidad.sleep = habDuration;
-								break;
-
 							case "Desgaste":
-								console.log("IA: Desgaste");
-								if( !iaHabilidad.sleep )
+								if( !iaHabilidad.sleep ) {
 									iaHabilidad.sleep = habDuration;
+									Materialize.toast(iaHabilidad.nombre_hab + ": " + iaHabilidad[elemento], 2000, "toast-ia");
+								}
 								break;
 
 							case "Recuperacion":
-								console.log("IA: Recuperacion");
-								$scope.IA.vida = recoverLife( $scope.IA.vida, $scope.IA.vidaTotal, iaHabilidad[ elemento ] ) ;
+								let life = recoverLife( $scope.IA.vida, $scope.IA.vidaTotal, iaHabilidad[ elemento ] ) ;
+								Materialize.toast(iaHabilidad.nombre_hab + ": " + life, 2000, "toast-ia");
+								$scope.IA.vida = life;
 								$scope.IA.vidaActual = porcentajeVida( $scope.IA.vida, $scope.IA.vidaTotal );
 								break;
 
@@ -291,9 +220,9 @@ app.controller('battleController', ['$scope', 'Querys','Data','$location', funct
 						$scope.turno = evaluarVidas( $scope.turno, $scope.myTamed.vida, $scope.IA.vida );
 						$scope.turno == 3 ? $scope.estado = "Perdiste" : $scope.estado;
 						$scope.turno == 4 ? $scope.estado = "Ganaste" : $scope.estado;
-						console.log($scope.estado);
 						$scope.$apply();
-					}, 2000);
+					};
+					setTimeout( iaAtaque, 2000);
 				}
 			}
 		};
@@ -322,7 +251,7 @@ app.controller('battleController', ['$scope', 'Querys','Data','$location', funct
 			return calculo <= 0 ? 1 : calculo;
 		};
 
-		var buffHab = function ( tamed, duration) {
+		var buffHab = function ( tamed, duration ) {
 			var element = tamed.elemento_tam;
 			for( var i = 0; i < 4; i++ ) {
 				var hab = tamed.habilidades[i];
@@ -341,11 +270,9 @@ app.controller('battleController', ['$scope', 'Querys','Data','$location', funct
 
 					case "Buff de defensa":
 						if( hab.sleep !== 0 ) {
-							console.error(hab);
 							if( hab.sleep === duration )
 								tamed.defensa += hab[ element ];
 
-							console.info(  element );
 
 							hab.sleep--;
 
@@ -358,7 +285,7 @@ app.controller('battleController', ['$scope', 'Querys','Data','$location', funct
 			return tamed;
 		};
 
-		var debuffHab = function ( tamed, element, duration ) {
+		var debuffHab = function( tamed, element, duration ) {
 			for( var i = 0; i < 4; i++ ) {
 				var hab = tamed.habilidades[i];
 				switch( hab.clasificacion_hab ) {
@@ -407,7 +334,6 @@ app.controller('battleController', ['$scope', 'Querys','Data','$location', funct
 			var userPowerfulHab;
 			var userElement = user.elemento_tam;
 			var iaElement = ia.elemento_tam;
-			console.log(ia.habilidades);
 
 			// Buscamos la habilidad ofensiva mas poderosa de la IA
 			if( (iaPowerfulHab = powerfulHab( ia, "Ofensivo" )) ) {
@@ -424,7 +350,6 @@ app.controller('battleController', ['$scope', 'Querys','Data','$location', funct
 							if( (iaPowerfulHab = powerfulHab( ia, "Recuperacion" )) ) {
 								// Verificamos si nos puede matar con un solo golpe de la habilidad igualmente
 								if( ia.vida + iaPowerfulHab[iaElement] <= calculateDmg( user.ataque, ia.defensa, userPowerfulHab ) ) {
-									// TODO: Que hacer si igualmente nos puede matar de un golpe
 									return iaPowerfulHab; // Nos hechamos vida igualmente
 								}
 								// Si no entonces usamos la habilidad
@@ -479,7 +404,6 @@ app.controller('battleController', ['$scope', 'Querys','Data','$location', funct
 								}
 								// Si no existe un buff o debuff que se pueda utilizar entonces
 								else {
-									// TODO: Que hacer si no existe alguna habilidad para que no nos maten
 								}
 							}
 						}
@@ -569,10 +493,8 @@ app.controller('battleController', ['$scope', 'Querys','Data','$location', funct
 								// Si no
 								else {
 									// Buscamos los buffs defensivos de la IA
-									console.info("%cEl pega mas duro", 'font-size:16pt');
 									let buffDefensa = powerfulHab( ia, "Buff de defensa" );
 									let anotherBuffDefensa = powerfulHab( ia, "Buff de defensa", buffDefensa );
-									console.info(buffDefensa.sleep, 'font-size:16pt');
 
 									// Buscamos los debuffs de ataque de la IA
 									let debuffAtaque = powerfulHab( ia, "Debuff de ataque" );
@@ -640,7 +562,6 @@ app.controller('battleController', ['$scope', 'Querys','Data','$location', funct
 						else if( existAnotherBuff )
 							return anotherBuffAtaque;
 						else {
-							// TODO: Atacamos con nuestra habilidad mas fuerte
 							return powerfulHab( user, "Ofensivo" );
 						}
 					}
@@ -724,7 +645,6 @@ app.controller('battleController', ['$scope', 'Querys','Data','$location', funct
 		};
 
 		var powerfulHab = function( tamed, tipo, notHab ) {
-			console.warn( tamed.habilidades );
 			var hab = tamed.habilidades[0];  	// Asignamos por defecto la primera hab
 			var element = tamed.elemento_tam;	// Obtenemos el elemento del tamed
 			// Iteramos para conseguir la hab mas fuerte
@@ -745,6 +665,16 @@ app.controller('battleController', ['$scope', 'Querys','Data','$location', funct
 		}
 	}
 
+    $scope.reiniciar = function() {
+        generateRandomIA( $scope.tameds, $scope.myTamed );
+        Materialize.toast("TE DESTRUIRE!", 2000, "toast-ia");
+        $scope.myTamed.vida = $scope.myTamed.vidaTotal;
+        $scope.IA.vida = $scope.IA.vidaTotal;
+        $scope.estado = 'In game';
+        $scope.IA.vidaActual = 100;
+        $scope.myTamed.vidaActual = 100;
+        $scope.turno = 1;
+    }
 }]);
 
 app.controller('myProfileController', ['$scope', 'Querys','Data','$location',
@@ -756,10 +686,10 @@ app.controller('myProfileController', ['$scope', 'Querys','Data','$location',
 	Querys.tameds()
 	.then(function(success){
 		$scope.tameds = success.data;
+        for( var i = 0; i < $scope.tameds.length; i++ )
+            $scope.tameds[i].vidaTotal = $scope.tameds[i].vida;
 		Data.setTameds(success.data);
-		console.log($scope.tameds);
 	}).catch(function(error){
-		console.log(error);
 	});
 
 	if(!$scope.myTamed && $scope.myUser.id_tam){
@@ -767,12 +697,10 @@ app.controller('myProfileController', ['$scope', 'Querys','Data','$location',
 		.then(function(success){
 			$scope.myTamed = potenciar(success.data);
 			$scope.loading = false;
-			console.log($scope.myTamed);
+            $scope.myTamed.vidaTotal = $scope.myTamed.vida;
 			Data.setTamed($scope.myTamed);
 		}).catch(function(error){
-			console.log(error);
 		})
-
 	}
 	else{
 		$scope.loading = false;
@@ -797,7 +725,6 @@ app.controller('myProfileController', ['$scope', 'Querys','Data','$location',
 			Data.setTamed(tamed);
 			$scope.myTamed = tamed;
 		}).catch(function(error){
-			console.log(error);
 		})
 	}
 }]);
@@ -812,9 +739,9 @@ var generateRandomIA = function(tamed, user ) {
 };
 
 var potenciar = function(tamed){
-	tamed.vida = parseInt( tamed.vida * tamed.potenciador + ( tamed.nivel * 20 ) );
-	tamed.ataque = parseInt( tamed.ataque * tamed.potenciador + ( tamed.nivel * 20 ) );
-	tamed.defensa = parseInt( tamed.defensa * tamed.potenciador + ( tamed.nivel * 20 ) );
+	tamed.vida = parseInt( tamed.vida * tamed.potenciador + ( tamed.nivel * 8 ) );
+	tamed.ataque = parseInt( tamed.ataque * tamed.potenciador + ( tamed.nivel * 8 ) );
+	tamed.defensa = parseInt( tamed.defensa * tamed.potenciador + ( tamed.nivel * 8 ) );
 	return tamed;
 };
 

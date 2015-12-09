@@ -55,6 +55,7 @@ app.post('/signup', function (req, res) {
             req.body.password
         ];
         connection.query(queryString, values)
+
         .then(function(){
             res.send("DONE")
         }).catch(function(error){

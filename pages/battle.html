@@ -1,8 +1,17 @@
 <div class="container">
     <div class="row mtop">
+		<div class="center-align col m8 offset-m2 red" ng-show="estado == 'Perdiste'">
+			<h1>{{estado}}</h1>
+			<a class="waves-effect waves-light btn btn-large yellow black-text mbot mtop" ng-click='reiniciar()'>Revancha</a>
+		</div>
+		<div class="center-align col m8 offset-m2 green" ng-show="estado == 'Ganaste'">
+			<h1>{{estado}}</h1>
+			<a class="waves-effect waves-light btn btn-large cyan black-text mbot mtop" ng-click='reiniciar()'>Revancha</a>
+		</div>
         <div ng-show="estado == 'In game'">
 	    <div class="col s12 green mtop">
 			<h1 class="center-align white-text"> Arena de Batalla </h1>
+			<audio src="media/musica/ElmentifBattleSong.mp3" autoplay loop></audio>
         </div>
 	    <div class="col s8 green lighten-4 arena">
 			<div class="col s12">
